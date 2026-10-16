@@ -40,17 +40,57 @@ class Form:
 
     # --- operaciones -----------------------------------------------------
     def blanks(self, i, *tags):
-        """Reemplaza, en orden, cada grupo de guiones bajos por un tag."""
+        """Reemplaza, en orden, cada grupo de guiones bajos por un tag.
+
+        Las líneas (4 o más guiones) quedan en su propio run, subrayado, con el
+        largo original en el tag ({nombre|largo}) para que el valor conserve la
+        línea del formato. Las casillas cortas (__) quedan como estaban.
+        """
         par = self.p(i)
         pending = list(tags)
-        for run in par.runs:
-            def sub(m):
+        for run in list(par.runs):
+            texto = run.text
+            if not BLANK.search(texto):
+                continue
+            partes, pos = [], 0
+            for m in BLANK.finditer(texto):
                 if not pending:
-                    return ""
-                tag = "{" + pending.pop(0) + "}"
-                before = m.string[m.start() - 1] if m.start() > 0 else " "
-                return (" " + tag) if not before.isspace() and before not in "(" else tag
-            run.text = BLANK.sub(sub, run.text)
+                    partes.append(("txt", texto[pos:m.start()]))
+                    pos = m.end()
+                    continue
+                antes = texto[pos:m.start()]
+                prev = texto[m.start() - 1] if m.start() > 0 else " "
+                if not prev.isspace() and prev not in "(":
+                    antes += " "
+                partes.append(("txt", antes))
+                largo = m.end() - m.start()
+                partes.append(("linea" if largo >= 4 else "casilla", pending.pop(0), largo))
+                pos = m.end()
+            partes.append(("txt", texto[pos:]))
+            base = copy.deepcopy(run._r)  # formato original, antes de subrayar
+            ancla = run._r
+            primero = True
+            for parte in partes:
+                if parte[0] == "txt" and not parte[1]:
+                    continue
+                if primero:
+                    r = run
+                    primero = False
+                else:
+                    nuevo = copy.deepcopy(base)
+                    ancla.addnext(nuevo)
+                    ancla = nuevo
+                    from docx.text.run import Run
+                    r = Run(nuevo, par)
+                if parte[0] == "txt":
+                    r.text = parte[1]
+                elif parte[0] == "linea":
+                    r.text = "{" + parte[1] + "|" + str(parte[2]) + "}"
+                    r.font.underline = True
+                else:
+                    r.text = "{" + parte[1] + "}"
+            if primero:
+                run.text = ""
         assert not pending, f"{self.name}[{i}] sobran tags {pending}: {par.text!r}"
 
     def append(self, i, tag, sep=" "):

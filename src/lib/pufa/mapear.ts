@@ -5,6 +5,10 @@ import { fechaCorta } from './calendario';
 
 const X = '☒';
 const O = '☐';
+/** Campo que se deja en blanco a propósito (no aplica): conserva la línea pero no se marca como pendiente. */
+export const VACIO = '\u2063';
+/** Texto que el usuario todavía debe completar o revisar: sale resaltado en amarillo. */
+export const POR_DEFINIR = 'Por definir';
 const cb = (v: boolean) => (v ? X : O);
 const na = (v: string | number | undefined | null, vacio = 'No aplica') =>
   v === undefined || v === null || v === '' || v === 0 ? vacio : String(v);
@@ -41,7 +45,7 @@ function comunes(s: Solicitud) {
 function elementos(l: Locacion) {
   const out: Record<string, string> = {};
   for (const [k] of ELEMENTOS) out[`el_${k}`] = String(l.elementos[k] ?? 0).padStart(2, '0');
-  out.escenografia_desc = l.escenografiaDesc ? `: ${l.escenografiaDesc}` : '';
+  out.escenografia_desc = l.escenografiaDesc ? `: ${l.escenografiaDesc}` : VACIO;
   out.otros_elementos = na(l.otrosElementos, 'Ninguno');
   return out;
 }
@@ -77,7 +81,7 @@ function f004(s: Solicitud) {
     tipo_web: cb(p.tipo === 'web'),
     tipo_videoclip: cb(p.tipo === 'videoclip'),
     tipo_otro: cb(p.tipo === 'otro'),
-    tipo_otro_cual: p.tipo === 'otro' ? p.tipoOtro : '',
+    tipo_otro_cual: p.tipo === 'otro' ? p.tipoOtro : VACIO,
     cine_corto: cb(p.tipo === 'cine' && sub === 'corto'),
     cine_medio: cb(p.tipo === 'cine' && sub === 'medio'),
     cine_largo: cb(p.tipo === 'cine' && sub === 'largo'),
@@ -85,14 +89,14 @@ function f004(s: Solicitud) {
     tv_telenovela: cb(p.tipo === 'tv' && sub === 'telenovela'),
     tv_reality: cb(p.tipo === 'tv' && sub === 'reality'),
     tv_otro: cb(p.tipo === 'tv' && sub === 'otro'),
-    tv_otro_cual: p.tipo === 'tv' && sub === 'otro' ? p.subtipoOtro : '',
+    tv_otro_cual: p.tipo === 'tv' && sub === 'otro' ? p.subtipoOtro : VACIO,
     pub_campana: p.tipo === 'publicidad' ? p.campana : 'No aplica',
     pub_spot: cb(p.tipo === 'publicidad' && sub === 'spot'),
     pub_corporativo: cb(p.tipo === 'publicidad' && sub === 'corporativo'),
     pub_promocional: cb(p.tipo === 'publicidad' && sub === 'promocional'),
     pub_redes: cb(p.tipo === 'publicidad' && sub === 'redes'),
     pub_otro: cb(p.tipo === 'publicidad' && sub === 'otro'),
-    pub_otro_cual: p.tipo === 'publicidad' && sub === 'otro' ? p.subtipoOtro : '',
+    pub_otro_cual: p.tipo === 'publicidad' && sub === 'otro' ? p.subtipoOtro : VACIO,
     vc_artista: p.tipo === 'videoclip' ? p.artista : 'No aplica',
     vc_cancion: p.tipo === 'videoclip' ? p.cancion : 'No aplica',
     web_tipo: p.tipo === 'web' ? p.contenidoTipo : 'No aplica',
@@ -115,7 +119,7 @@ function f004(s: Solicitud) {
     fx_aire: cb(fx.has('aire')),
     fx_explosiones: cb(fx.has('explosiones')),
     fx_otro: cb(fx.has('otro')),
-    fx_otro_cual: fx.has('otro') ? s.riesgos.efectoOtro : '',
+    fx_otro_cual: fx.has('otro') ? s.riesgos.efectoOtro : VACIO,
     fx_escena: fx.size ? s.riesgos.efectosEscena : 'No aplica: la filmación no usa efectos especiales.',
     an_tipo: an ? an.tipo : 'No aplica',
     an_cantidad: an ? String(an.cantidad) : 'No aplica',
@@ -138,8 +142,8 @@ function f004(s: Solicitud) {
     })),
     notif_si: cb(s.notificacion.autoriza),
     notif_no: cb(!s.notificacion.autoriza),
-    notif_correo: s.notificacion.autoriza ? s.notificacion.correo || s.responsables.filmacion.correo : '',
-    firma: '______________________',
+    notif_correo: s.notificacion.autoriza ? s.notificacion.correo || s.responsables.filmacion.correo : VACIO,
+    firma: '',
   };
 }
 
@@ -196,16 +200,16 @@ function f006(s: Solicitud) {
           esquema: '[Pegue aquí el pantallazo de Google Maps en modo satélite con base, set y zona de parqueo]',
           ...elementos(l),
           ...sn('mio', m?.afectaMio),
-          implementacion: na(m?.implementacion, 'Por definir'),
+          implementacion: na(m?.implementacion, POR_DEFINIR),
           ...sn('peatonal', m?.desvioPeatonal),
           ...sn('publico', m?.desvioPublico),
           ...sn('socializar', m?.socializarEmpresas),
           ...sn('particular', m?.desvioParticular),
-          senalizacion: na(m?.senalizacion, 'Por definir'),
-          cargue: na(m?.cargueDescargue, 'Por definir'),
+          senalizacion: na(m?.senalizacion, POR_DEFINIR),
+          cargue: na(m?.cargueDescargue, POR_DEFINIR),
           ...sn('semaforos', m?.semaforos),
           semaforos_detalle: m?.semaforos ? m.semaforosDetalle : 'No aplica',
-          parqueo: na(m?.parqueo, 'Por definir'),
+          parqueo: na(m?.parqueo, POR_DEFINIR),
         };
       }),
   };
@@ -254,7 +258,7 @@ function f007(s: Solicitud) {
     ruido_plantas_tipo: na(a.ruidoPlantas.tipo),
     ruido_veh_cantidad: String(a.ruidoVehiculos.cantidad),
     ruido_veh_tipo: na(a.ruidoVehiculos.tipo),
-    ruido_otro_tipo: '',
+    ruido_otro_tipo: VACIO,
     ruido_mitigacion: na(a.ruidoMitigacion),
     sensibles: na(a.sensibles, 'No se identifican instituciones sensibles cercanas.'),
     medidas_acusticas: na(a.medidasAcusticas),

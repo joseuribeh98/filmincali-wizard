@@ -3,7 +3,7 @@ import Docxtemplater from 'docxtemplater';
 import PizZip from 'pizzip';
 import JSZip from 'jszip';
 import { Solicitud, type SolicitudInput } from './schema';
-import { MAPEOS } from './mapear';
+import { MAPEOS, POR_DEFINIR, VACIO } from './mapear';
 import { anexos, estimarRetribucion, FORMATOS, formatosRequeridos, pesos, plazos, rangoRodaje, revisar, type CodigoFormato } from './derivar';
 import { fechaLarga } from './calendario';
 
@@ -13,14 +13,95 @@ export function validar(input: unknown) {
   return Solicitud.safeParse(input);
 }
 
+/** Marcas internas que se resuelven al final, en el XML de cada run. */
+const PENDIENTE = '\ue000';
+const LINEA = '\ue001';
+const CASILLAS = new Set(['☒', '☐']);
+const rayas = (n: number) => '_'.repeat(Math.max(0, n));
+
+/**
+ * Da forma a cada valor según su tag. `{campo|n}` era una línea de n guiones en el
+ * formato original: el valor queda subrayado y la línea sigue con guiones hasta
+ * cerca de su largo, como en el papel. Lo vacío, los textos entre corchetes y
+ * "Por definir" se marcan como pendientes para resaltarlos.
+ */
+function formatear(v: unknown, largo: number): unknown {
+  if (typeof v !== 'string' && typeof v !== 'number') return v;
+  const t = String(v);
+  if (CASILLAS.has(t)) return t;
+  if (t === VACIO) return largo ? LINEA + rayas(largo) : '';
+  if (!t.trim()) return PENDIENTE + LINEA + rayas(largo || 12);
+  const pendiente = t === POR_DEFINIR || /^\[[\s\S]*\]$/.test(t.trim());
+  // Se deja un margen para que el valor y la línea no pasen a un segundo renglón.
+  const resto = largo && !t.includes('\n') ? Math.floor((largo - t.length * 1.1) * 0.9) - 1 : 0;
+  return (pendiente ? PENDIENTE : '') + t + (resto > 0 ? LINEA + rayas(resto) : '');
+}
+
+const largoDe = (tag: string) => Number(tag.split('|')[1] ?? 0) || 0;
+
+// Orden de los hijos de <w:rPr> en WordprocessingML: el resaltado va antes de estos.
+const DESPUES_DE_RESALTADO = ['u', 'effect', 'bdr', 'shd', 'fitText', 'vertAlign', 'rtl', 'cs', 'em', 'lang', 'eastAsianLayout', 'specVanish', 'oMath', 'rPrChange'];
+
+function conResaltado(rpr: string): string {
+  const dentro = rpr.replace(/<w:highlight\b[^>]*\/>/g, '');
+  const sig = DESPUES_DE_RESALTADO.map((n) => dentro.search(new RegExp(`<w:${n}[\\s/>]`))).filter((i) => i >= 0);
+  const pos = sig.length ? Math.min(...sig) : dentro.length;
+  return dentro.slice(0, pos) + '<w:highlight w:val="yellow"/>' + dentro.slice(pos);
+}
+
+const sinSubrayado = (rpr: string) => rpr.replace(/<w:u\b[^>]*\/>/g, '');
+
+function procesarRun(run: string): string {
+  const apertura = run.match(/^<w:r(?:\s[^>]*)?>/)![0];
+  const rpr = run.match(/<w:rPr>([\s\S]*?)<\/w:rPr>/)?.[1] ?? '';
+  const pendiente = run.includes(PENDIENTE);
+  const textos = run.match(/<w:t(?:\s[^>]*)?>[\s\S]*?<\/w:t>/g) ?? [];
+  const limpiar = (x: string) => x.split(PENDIENTE).join('');
+  const armar = (props: string, cuerpo: string) => `${apertura}${props ? `<w:rPr>${props}</w:rPr>` : ''}${cuerpo}</w:r>`;
+  const marcar = (props: string) => (pendiente ? conResaltado(props) : props);
+
+  if (!run.includes(LINEA) || textos.length !== 1) {
+    const cuerpo = limpiar(run.replace(apertura, '').replace(/<w:rPr>[\s\S]*?<\/w:rPr>/, '').replace(/<\/w:r>$/, '')).split(LINEA).join('');
+    return armar(marcar(rpr), cuerpo);
+  }
+  const contenido = textos[0].replace(/^<w:t(?:\s[^>]*)?>/, '').replace(/<\/w:t>$/, '');
+  const [valor, linea] = limpiar(contenido).split(LINEA);
+  const t = (x: string) => `<w:t xml:space="preserve">${x}</w:t>`;
+  return (valor ? armar(marcar(rpr), t(valor)) : '') + (linea ? armar(marcar(sinSubrayado(rpr)), t(linea)) : '');
+}
+
+/** Resuelve las marcas: separa valor y línea, y resalta en amarillo lo pendiente. */
+export function marcarCampos(xml: string): string {
+  if (!xml.includes(PENDIENTE) && !xml.includes(LINEA)) return xml;
+  return xml.replace(/<w:r(?:\s[^>]*)?>(?:(?!<\/w:r>)[\s\S])*?<\/w:r>/g, (run) =>
+    run.includes(PENDIENTE) || run.includes(LINEA) ? procesarRun(run) : run,
+  );
+}
+
 export function renderizar(plantilla: ArrayBuffer | Uint8Array, datos: Record<string, unknown>): Uint8Array {
   const doc = new Docxtemplater(new PizZip(plantilla), {
     paragraphLoop: true,
     linebreaks: true,
-    nullGetter: () => '',
+    parser: (tag: string) => {
+      const [nombre] = tag.split('|');
+      const largo = largoDe(tag);
+      return {
+        get(scope: unknown) {
+          if (nombre === '.') return scope;
+          const v = scope && typeof scope === 'object' ? (scope as Record<string, unknown>)[nombre] : undefined;
+          return v === undefined || v === null ? undefined : formatear(v, largo);
+        },
+      };
+    },
+    // Un tag sin dato en ningún nivel también queda pendiente; los bucles y condiciones no.
+    nullGetter: (part: { module?: string; value?: string }) => (part.module ? '' : (formatear('', largoDe(part.value ?? '')) as string)),
   });
   doc.render(datos);
-  return doc.getZip().generate({ type: 'uint8array', compression: 'DEFLATE' });
+  const zip = doc.getZip();
+  for (const nombre of Object.keys(zip.files).filter((n) => /^word\/(document|header\d*|footer\d*)\.xml$/.test(n))) {
+    zip.file(nombre, marcarCampos(zip.file(nombre)!.asText()));
+  }
+  return zip.generate({ type: 'uint8array', compression: 'DEFLATE' });
 }
 
 export function instrucciones(s: Solicitud, hoy?: string): string {
@@ -54,6 +135,9 @@ export function instrucciones(s: Solicitud, hoy?: string): string {
   }
   L.push('FORMATOS INCLUIDOS');
   for (const c of req) L.push(`- ${FORMATOS[c].archivo}: ${FORMATOS[c].titulo}`);
+  L.push('');
+  L.push('LO RESALTADO EN AMARILLO');
+  L.push('- En los formatos, lo resaltado en amarillo está pendiente: datos que faltan, fotos o planos por pegar y la firma. Complétalo y quita el resaltado antes de radicar.');
   L.push('');
   L.push('ANTES DE RADICAR, ADJUNTA O PEGA EN LOS FORMATOS');
   for (const a of anexos(s)) L.push(`[ ] ${a.texto}${a.formato ? ` (${a.formato})` : ''}${a.obligatorio ? '' : ' (opcional)'}`);

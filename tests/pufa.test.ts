@@ -38,7 +38,8 @@ describe('generación', () => {
     expect(r.archivos).toHaveLength(5);
     for (const a of r.archivos) {
       const t = texto(a.bytes);
-      expect(t, a.codigo).not.toMatch(/\{[#/^]?[a-z_0-9]+\}/);
+      expect(t, a.codigo).not.toMatch(/\{[#/^]?[a-z_0-9]+(\|\d+)?\}/);
+      expect(t, a.codigo).not.toMatch(/[\ue000\ue001\u2063]/);
     }
     const f004 = texto(r.archivos[0].bytes);
     expect(f004).toContain('Brisa de Río (videoclip de ejemplo)');
@@ -49,6 +50,19 @@ describe('generación', () => {
     const f007 = texto(r.archivos.find((a) => a.codigo === 'F007')!.bytes);
     expect(f007).toContain('Nombre del área natural 1: Río Pance');
     expect(r.avisos.filter((a) => a.nivel === 'error')).toEqual([]);
+  });
+
+  it('conserva la línea del formato y resalta lo pendiente', async () => {
+    const datos = structuredClone(ejemplo);
+    datos.responsables.filmacion.telefono = '';
+    const r = await generarPaquete(datos, cargar, '2026-10-15');
+    const xml = new PizZip(r.archivos[0].bytes).file('word/document.xml')!.asText();
+    const t = xml.replace(/<[^>]+>/g, '');
+    // El valor sigue en la línea original y el teléfono vacío queda como línea resaltada.
+    expect(t).toMatch(/Nombre completo: Ana Ejemplo_{10,}/);
+    expect(t).toMatch(/Teléfono de contacto: _{40,}/);
+    const resaltados = xml.match(/<w:highlight w:val="yellow"\/>/g) ?? [];
+    expect(resaltados.length).toBe(2); // teléfono y firma
   });
 });
 

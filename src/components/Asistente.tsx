@@ -613,7 +613,7 @@ function Descargar({ e, s, requeridos, generar, generando, guardar, irA }: {
 
       <h4 class="bloque-titulo">Después de descargar</h4>
       <ol class="pasos">
-        <li>Abre cada formato, pega fotos y planos donde lo indica y firma el formulario de solicitud.</li>
+        <li>Abre cada formato y completa lo que está <mark>resaltado en amarillo</mark>: datos que faltan, fotos y planos por pegar y la firma. Luego quita el resaltado.</li>
         <li>Radica todo en la <a href="https://archivo.cali.gov.co/participacion/publicaciones/161718/radicacion-de-peticiones-quejas-y-reclamos/">plataforma PQRS de la Alcaldía</a>, dirigido a la Subdirección de Espacio Público y Ordenamiento Urbanístico (SEPOU).</li>
         <li>Envía el número de radicado a filmincali@cali.gov.co y aprovechamientoep@cali.gov.co.</li>
         <li>Si falta algún documento, te devuelven la solicitud y tienes 30 días para completarla. Con la documentación completa, la SEPOU tiene 15 días hábiles para revisarla.</li>

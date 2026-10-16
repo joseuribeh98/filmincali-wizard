@@ -55,6 +55,7 @@ El detalle del proceso, contactos y enlaces oficiales está en `references/trami
 
 - No radica. La radicación es en la plataforma PQRS de la Alcaldía, a nombre del solicitante.
 - No pega fotos ni planos: deja el espacio marcado en el formato.
+- No inventa lo que falta: los campos vacíos, los espacios para fotos y planos y la firma salen resaltados en amarillo para que el usuario los complete. Los valores conservan la línea del formato original.
 - No liquida el valor oficial; solo lo estima. La Alcaldía tiene su propia calculadora: https://www.cali.gov.co/planeacion/publicaciones/183378/tramite-de-aeep/
 
 ## Formato de los documentos
