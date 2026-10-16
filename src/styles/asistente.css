@@ -221,3 +221,5 @@
 
 .aviso-excepcion { margin: 0; padding: 0.85rem 1rem; border-radius: var(--r-md); background: var(--ok-soft); color: #14532d; font-size: 0.875rem; }
 .aviso-excepcion a { font-weight: 500; }
+
+.celda { display: contents; }

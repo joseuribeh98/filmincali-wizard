@@ -39,10 +39,9 @@ const docs = [
   faq={faq}
 >
   <section class="hero">
-    <picture class="hero-foto" aria-hidden="true">
-      <source media="(max-width: 52rem)" srcset="/fotos/rodaje-1000.webp" />
-      <img src="/fotos/rodaje-2000.webp" alt="" width="2000" height="1333" fetchpriority="high" decoding="async" />
-    </picture>
+    <div class="hero-foto" aria-hidden="true">
+      <img src="/fotos/rodaje-1400.webp" srcset="/fotos/rodaje-1000.webp 1000w, /fotos/rodaje-1400.webp 1400w, /fotos/rodaje-2000.webp 2000w" sizes="100vw" alt="" width="2000" height="1333" fetchpriority="high" decoding="async" />
+    </div>
     <div class="envoltura hero-in">
       <div class="hero-copia">
         <p class="pastilla"><span class="punto" aria-hidden="true"></span>Herramienta independiente, no oficial</p>
@@ -118,7 +117,7 @@ const docs = [
     <ul class="docs">
       {docs.map((d) => (
         <li class="doc">
-          <a class="doc-enlace" href={d.url} target="_blank" rel="noopener noreferrer" data-externo="1" aria-label={`Descargar en blanco el formato ${d.c}, ${d.t}, desde filmincali.com.co (abre en una pestaña nueva)`}>
+          <a class="doc-enlace" href={d.url} target="_blank" rel="noopener noreferrer" data-externo="1">
           <div class="doc-hoja" aria-hidden="true">
             <span class="doc-cab"></span>
             <span class="l"></span><span class="l lleno"></span>
@@ -126,6 +125,7 @@ const docs = [
             <span class="l"></span><span class="l lleno corta"></span>
           </div>
           <div class="doc-info">
+            <span class="sr-only">Descargar en blanco desde filmincali.com.co:</span>
             <span class="mono doc-cod">{d.c}</span>
             <h3 class="doc-t">{d.t}</h3>
             <p>{d.d}</p>
@@ -212,7 +212,7 @@ const docs = [
       <h2 id="solicitud-titulo" class="h-seccion">Tu solicitud</h2>
       <p class="lead">Se guarda sola en este navegador. Puedes cargar un ejemplo para ver cómo queda.</p>
     </div>
-    <Asistente client:load />
+    <Asistente client:visible />
   </section>
 
   <section class="envoltura bloque" aria-labelledby="agentes-titulo">

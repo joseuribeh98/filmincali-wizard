@@ -343,20 +343,20 @@ function Locaciones({ e, set, setE, pedir }: P & { setE: (fn: (prev: Estado) => 
                 <legend>Jornadas en esta locación</legend>
                 <small>Una fila por bloque de montaje, filmación o desmontaje. Así se liquida el valor a pagar.</small>
                 <div class="jornadas" role="table" aria-label={`Jornadas de la locación ${i + 1}`}>
-                  <div class="fila cab" role="row"><span role="columnheader">Fecha</span><span role="columnheader">Actividad</span><span role="columnheader">Inicio</span><span role="columnheader">Fin</span><span /></div>
+                  <div class="fila cab" role="row"><span role="columnheader">Fecha</span><span role="columnheader">Actividad</span><span role="columnheader">Inicio</span><span role="columnheader">Fin</span><span role="columnheader"><span class="sr-only">Acciones</span></span></div>
                   {l.jornadas.map((j, k) => {
                     const rj: Ruta = [...r, 'jornadas', k];
                     return (
                       <div class="fila" role="row" key={k}>
-                        <input aria-label="Fecha" type="date" value={j.fecha} onInput={(ev) => set([...rj, 'fecha'], (ev.currentTarget as HTMLInputElement).value)} />
-                        <select aria-label="Actividad" value={j.actividad} onChange={(ev) => set([...rj, 'actividad'], (ev.currentTarget as HTMLSelectElement).value)}>
+                        <span role="cell" class="celda"><input aria-label={`Fecha, jornada ${k + 1}`} type="date" value={j.fecha} onInput={(ev) => set([...rj, 'fecha'], (ev.currentTarget as HTMLInputElement).value)} /></span>
+                        <span role="cell" class="celda"><select aria-label={`Actividad, jornada ${k + 1}`} value={j.actividad} onChange={(ev) => set([...rj, 'actividad'], (ev.currentTarget as HTMLSelectElement).value)}>
                           <option value="montaje">Montaje</option>
                           <option value="filmacion">Filmación</option>
                           <option value="desmontaje">Desmontaje</option>
-                        </select>
-                        <input aria-label="Hora inicial" type="time" value={j.horaInicio} onInput={(ev) => set([...rj, 'horaInicio'], (ev.currentTarget as HTMLInputElement).value)} />
-                        <input aria-label="Hora final" type="time" value={j.horaFin} onInput={(ev) => set([...rj, 'horaFin'], (ev.currentTarget as HTMLInputElement).value)} />
-                        <span class="fila-acciones">
+                        </select></span>
+                        <span role="cell" class="celda"><input aria-label={`Hora inicial, jornada ${k + 1}`} type="time" value={j.horaInicio} onInput={(ev) => set([...rj, 'horaInicio'], (ev.currentTarget as HTMLInputElement).value)} /></span>
+                        <span role="cell" class="celda"><input aria-label={`Hora final, jornada ${k + 1}`} type="time" value={j.horaFin} onInput={(ev) => set([...rj, 'horaFin'], (ev.currentTarget as HTMLInputElement).value)} /></span>
+                        <span class="fila-acciones" role="cell">
                           <button type="button" class="icono" title="Duplicar para el día siguiente" aria-label={`Duplicar jornada ${k + 1} para el día siguiente`}
                             onClick={() => { const js = [...l.jornadas]; js.splice(k + 1, 0, { ...j, fecha: diaSiguiente(j.fecha) }); set([...r, 'jornadas'], ordenar(js)); }}>
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2" /><path d="M4 16V5a1 1 0 0 1 1-1h11" /></svg>
