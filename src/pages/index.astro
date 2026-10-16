@@ -1,0 +1,360 @@
+---
+import Base from '../layouts/Base.astro';
+import Plazo from '../components/Plazo.tsx';
+import Asistente from '../components/Asistente.tsx';
+
+const faq = [
+  { p: '¿Con cuánta anticipación se pide el permiso de rodaje en Cali?', r: 'La solicitud se radica mínimo 20 días hábiles y máximo 3 meses antes del primer día de rodaje. Los días hábiles excluyen sábados, domingos y festivos.' },
+  { p: '¿Dónde se radica la solicitud?', r: 'En la plataforma de PQRS de la Alcaldía de Cali, dirigida a la Subdirección de Espacio Público y Ordenamiento Urbanístico (SEPOU). Luego se envía el número de radicado a filmincali@cali.gov.co y aprovechamientoep@cali.gov.co.' },
+  { p: '¿Cuánto se demora la respuesta?', r: 'Con la documentación completa, la SEPOU tiene 15 días hábiles para revisarla. Si falta algún documento, devuelve la solicitud y el solicitante tiene 30 días para completarla.' },
+  { p: '¿Qué formatos se necesitan?', r: 'El formulario de solicitud (F004), la propuesta de ocupación (F005), el concepto ambiental (F007) y la estrategia de socialización (F008). El plan de movilidad (F006) se agrega cuando el rodaje afecta vías, andenes o pasos peatonales.' },
+  { p: '¿Qué rodajes no necesitan este permiso?', r: 'El artículo 7 de la Resolución 4132.030.21.1-7 de 2025 exceptúa seis casos: coberturas periodísticas de última hora que no permiten preproducción; filmaciones con cámara en mano que no intervienen el tránsito vehicular o peatonal ni estacionan vehículos de la producción en la vía; trabajos fotográficos; proyecciones de obras audiovisuales en espacio público; espectáculos públicos o eventos culturales, se filmen o no; y eventos BTL, activaciones de marca o acciones de mercadeo que no terminen en la filmación de un comercial.' },
+  { p: '¿Guardan los datos que escribo?', r: 'No. El sitio no tiene servidor de datos, analítica ni cookies. Lo que escribes se queda en tu navegador, que lo guarda para que no pierdas el avance, y los .docx se arman en tu propio equipo. Puedes borrarlo todo con «Empezar de cero».' },
+  { p: '¿Puedo revisar el código?', r: 'Sí. El proyecto es de código abierto y está en GitHub (github.com/joseuribeh98/filmincali-wizard). Ahí está todo lo que corre en esta página y en la skill para agentes de IA.' },
+  { p: '¿Esta herramienta es oficial?', r: 'No. Es una herramienta independiente que llena los formatos oficiales publicados por la Comisión Fílmica. No radica la solicitud ni garantiza su aprobación.' },
+];
+
+const excepciones = [
+  { t: 'Periodismo de última hora', d: 'Coberturas de hechos noticiosos que, por su naturaleza, no permiten preproducción.' },
+  { t: 'Cámara en mano', d: 'Sin intervenir el tránsito de vehículos o peatones y sin estacionar vehículos de la producción en la vía.' },
+  { t: 'Fotografía', d: 'Trabajos fotográficos en espacio público.' },
+  { t: 'Proyecciones', d: 'Exhibición de obras audiovisuales en espacio público.' },
+  { t: 'Espectáculos y eventos culturales', d: 'Espectáculos públicos o eventos culturales, aunque se filmen.' },
+  { t: 'BTL y activaciones de marca', d: 'Acciones de mercadeo que no terminen en la filmación de un comercial.' },
+];
+
+const docs = [
+  { c: 'F004', url: 'https://www.filmincali.com.co/wp-content/uploads/2025/09/MMDI02.02.07.P010.F004-_Formato-de-solicitud.docx', t: 'Formulario de solicitud', d: 'Responsables, proyecto, escenas, riesgos y cronograma.', cuando: 'Siempre' },
+  { c: 'F005', url: 'https://www.filmincali.com.co/wp-content/uploads/2025/09/MMDI02.02.07.P010.F005_Propuesta-de-Ocupacion.docx', t: 'Propuesta de ocupación', d: 'Área, elementos y plano por locación.', cuando: 'Siempre' },
+  { c: 'F006', url: 'https://www.filmincali.com.co/wp-content/uploads/2025/09/MMDI02.02.07.P010.F006_Plan-de-Movilidad.docx', t: 'Plan de movilidad', d: 'Cierres, desvíos y señalización.', cuando: 'Si afecta vías o andenes' },
+  { c: 'F007', url: 'https://www.filmincali.com.co/wp-content/uploads/2025/09/MMDI02.02.07.P010.F007_Concepto-ambiental.docx', t: 'Concepto ambiental', d: 'Residuos, ruido y áreas naturales.', cuando: 'Siempre' },
+  { c: 'F008', url: 'https://www.filmincali.com.co/wp-content/uploads/2025/09/MMDI02.02.07.P010.F008_Socializacion.docx', t: 'Socialización', d: 'Cómo informarás a la comunidad.', cuando: 'Siempre' },
+];
+---
+<Base
+  title="Permiso de rodaje en espacio público de Cali: formatos F004 a F008"
+  description="Llena una vez los datos de tu producción y descarga los formatos oficiales del permiso de rodaje en espacio público de Cali, con la fecha límite para radicar y un valor estimado. Herramienta independiente y gratuita."
+  oscuro
+  imagen="/fotos/rodaje-1000.webp"
+  faq={faq}
+>
+  <section class="hero">
+    <picture class="hero-foto" aria-hidden="true">
+      <source media="(max-width: 52rem)" srcset="/fotos/rodaje-1000.webp" />
+      <img src="/fotos/rodaje-2000.webp" alt="" width="2000" height="1333" fetchpriority="high" decoding="async" />
+    </picture>
+    <div class="envoltura hero-in">
+      <div class="hero-copia">
+        <p class="pastilla"><span class="punto" aria-hidden="true"></span>Herramienta independiente, no oficial</p>
+        <h1 class="h-hero">Permiso de rodaje en espacio público de Cali</h1>
+        <p class="lead">Escribe una sola vez los datos de tu producción y descarga llenos los formatos F004 a F008 que pide la Alcaldía, listos para revisar y radicar.</p>
+        <div class="hero-cta">
+          <a class="boton acento grande" href="#solicitud">Empezar la solicitud</a>
+          <a class="boton grande hero-sec" href="#como-funciona">Cómo funciona</a>
+        </div>
+        <p class="hero-nota">Es gratis y tus datos no salen de este navegador.</p>
+      </div>
+      <div class="hero-widget">
+        <Plazo client:load />
+      </div>
+    </div>
+    <p class="envoltura hero-credito">Foto: Huong Do en Unsplash.</p>
+  </section>
+
+  <section class="envoltura bloque" id="excepciones" aria-labelledby="exc-titulo">
+    <div class="excepciones">
+      <div class="exc-cab">
+        <h2 id="exc-titulo" class="h-seccion">Antes de empezar: ¿necesitas el permiso?</h2>
+        <p class="lead">La guía de filmaciones exceptúa seis tipos de proyecto. Si el tuyo es uno de estos, no tienes que hacer el trámite.</p>
+        <p class="muted chico">Fuente: <a href="https://www.filmincali.com.co/wp-content/uploads/2025/10/Res_4132.030.21.1-1_de_2025_filmaciones-con-anexos.pdf">Resolución 4132.030.21.1-7 de 2025</a>, artículo 7, numeral 1. Si tienes dudas sobre tu caso, escribe a filmincali@cali.gov.co.</p>
+      </div>
+      <ul class="exc-lista">
+        {excepciones.map((x) => (
+          <li>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+            <div><strong>{x.t}</strong><span>{x.d}</span></div>
+          </li>
+        ))}
+      </ul>
+      <p class="exc-pie">Si tu rodaje no encaja en ninguno de estos casos, sí necesitas el permiso. <a href="#solicitud">Empieza la solicitud</a></p>
+    </div>
+  </section>
+
+  <section class="envoltura bloque" id="como-funciona" aria-labelledby="como-titulo">
+    <div class="bloque-cab">
+      <h2 id="como-titulo" class="h-seccion">Cómo funciona</h2>
+      <p class="lead">Los formatos piden varias veces los mismos datos. El proyecto y los responsables van al inicio de casi todos, y la fecha y la dirección de cada locación aparecen en cuatro de ellos. Aquí los escribes una vez y quedan en cada formato.</p>
+    </div>
+    <ol class="pasos-3">
+      <li>
+        <span class="paso-n">1</span>
+        <h3 class="h-card">Llena la solicitud</h3>
+        <p>Proyecto, responsables, locaciones y jornadas. Las preguntas de movilidad y de áreas naturales solo aparecen si tu rodaje las necesita.</p>
+      </li>
+      <li>
+        <span class="paso-n">2</span>
+        <h3 class="h-card">Revisa fechas y valor</h3>
+        <p>Ves el último día para radicar, contado en días hábiles con los festivos de Colombia, y un estimado de lo que pagarías por usar el espacio público.</p>
+      </li>
+      <li>
+        <span class="paso-n">3</span>
+        <h3 class="h-card">Descarga los formatos</h3>
+        <p>Recibes un .zip con los documentos llenos y la lista de fotos, planos y cartas que debes adjuntar antes de radicar.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="envoltura bloque" aria-labelledby="docs-titulo">
+    <div class="bloque-cab">
+      <h2 id="docs-titulo" class="h-seccion">Formatos del permiso</h2>
+      <p class="lead">Son los formatos que publica la Comisión Fílmica de Cali. La herramienta llena los espacios en blanco y las casillas, y el resto del documento queda igual. Si prefieres llenarlos a mano, cada tarjeta descarga el original desde filmincali.com.co.</p>
+    </div>
+    <ul class="docs">
+      {docs.map((d) => (
+        <li class="doc">
+          <a class="doc-enlace" href={d.url} target="_blank" rel="noopener noreferrer" data-externo="1" aria-label={`Descargar en blanco el formato ${d.c}, ${d.t}, desde filmincali.com.co (abre en una pestaña nueva)`}>
+          <div class="doc-hoja" aria-hidden="true">
+            <span class="doc-cab"></span>
+            <span class="l"></span><span class="l lleno"></span>
+            <span class="l corta"></span><span class="l lleno media"></span>
+            <span class="l"></span><span class="l lleno corta"></span>
+          </div>
+          <div class="doc-info">
+            <span class="mono doc-cod">{d.c}</span>
+            <h3 class="doc-t">{d.t}</h3>
+            <p>{d.d}</p>
+            <span class:list={['doc-cuando', { condicional: d.cuando !== 'Siempre' }]}>{d.cuando}</span>
+            <span class="doc-espacio" aria-hidden="true"></span>
+            <span class="doc-descarga" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14" /></svg>
+              Original en blanco
+            </span>
+          </div>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="envoltura bloque" aria-labelledby="set-titulo">
+    <h2 id="set-titulo" class="h-seccion galeria-titulo">Rodar en Cali</h2>
+    <div class="galeria">
+      <figure class="g-a">
+        <img src="/fotos/ermita-1000.webp" srcset="/fotos/ermita-1000.webp 1000w, /fotos/ermita-2000.webp 2000w" sizes="(max-width: 52rem) 100vw, 66vw" alt="Iglesia de La Ermita en Cali bajo un cielo nublado" width="2000" height="1524" loading="lazy" decoding="async" />
+        <figcaption><strong>La Ermita</strong><span>Foto: Juan Manuel González Restrepo</span></figcaption>
+      </figure>
+      <figure class="g-b">
+        <img src="/fotos/aerea-1000.webp" srcset="/fotos/aerea-1000.webp 1000w, /fotos/aerea-2000.webp 2000w" sizes="(max-width: 52rem) 100vw, 33vw" alt="Vista aérea de Cali en blanco y negro" width="2000" height="1333" loading="lazy" decoding="async" />
+        <figcaption><strong>Cali desde el aire</strong><span>Foto: Andrés F. Urán</span></figcaption>
+      </figure>
+      <figure class="g-c">
+        <img src="/fotos/letras-1000.webp" srcset="/fotos/letras-1000.webp 1000w, /fotos/letras-2000.webp 2000w" sizes="(max-width: 52rem) 100vw, 33vw" alt="Letras de colores con la palabra Cali en un parque" width="2000" height="1273" loading="lazy" decoding="async" />
+        <figcaption><strong>Letras de Cali</strong><span>Foto: Freddy Jim</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="envoltura bloque" aria-labelledby="costo-titulo">
+    <div class="costo">
+      <div>
+        <h2 id="costo-titulo" class="h-seccion">Cuánto cuesta el permiso</h2>
+        <p class="lead">La Resolución 4132.030.21.1-7 de 2025 fija lo que se paga por usar el espacio público en una filmación. Con tus datos, la herramienta calcula un estimado al final de la solicitud.</p>
+        <p class="muted chico">El valor oficial lo liquida la Subdirección de Espacio Público y Ordenamiento Urbanístico. Los proyectos académicos, comunitarios o financiados con fondos públicos del Distrito no pagan, aunque sí hacen el trámite.</p>
+      </div>
+      <div class="formula-card">
+        <p class="formula"><span>Valor</span> = (<span>área</span> × <span>días</span> × <span>escala</span> × <span>UVT</span>) ÷ 12</p>
+        <dl class="variables">
+          <div><dt>Área</dt><dd>m² de set, base y parqueo en espacio público</dd></div>
+          <div><dt>Días</dt><dd>días con ocupación en cada locación</dd></div>
+          <div><dt>Escala</dt><dd>local 0,4; zonal 0,6; urbana 0,8; regional 1; andén 2</dd></div>
+          <div><dt>UVT</dt><dd>$ 52.374 en 2026</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="envoltura bloque" id="privacidad" aria-labelledby="priv-titulo">
+    <div class="bloque-cab">
+      <h2 id="priv-titulo" class="h-seccion">Código abierto. Tus datos no salen de tu navegador</h2>
+      <p class="lead">En la solicitud van documentos, teléfonos y direcciones. Por eso la herramienta no los recibe: todo pasa en tu equipo y el código está publicado para que cualquiera lo revise.</p>
+    </div>
+    <ul class="garantias">
+      <li><strong>Sin servidor de datos</strong><span>Los formatos se llenan dentro del navegador. Ningún dato de la solicitud se envía a internet.</span></li>
+      <li><strong>Sin analítica ni cookies</strong><span>No hay rastreadores ni scripts de terceros. Nadie ve lo que escribes.</span></li>
+      <li><strong>Guardado local</strong><span>Tu avance se guarda solo en este navegador. «Empezar de cero» lo borra.</span></li>
+      <li><strong>Código auditable</strong><span>El sitio y la skill están en GitHub, sin minificar en el caso del script de la skill.</span></li>
+    </ul>
+    <p><a class="boton" href="https://github.com/joseuribeh98/filmincali-wizard">Ver el código en GitHub</a></p>
+  </section>
+
+  <section class="envoltura bloque" aria-labelledby="faq-titulo">
+    <div class="bloque-cab">
+      <h2 id="faq-titulo" class="h-seccion">Preguntas frecuentes</h2>
+    </div>
+    <div class="faq">
+      {faq.map((f) => (
+        <details>
+          <summary>{f.p}</summary>
+          <p>{f.r}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <section class="envoltura bloque" id="solicitud" aria-labelledby="solicitud-titulo">
+    <div class="bloque-cab">
+      <h2 id="solicitud-titulo" class="h-seccion">Tu solicitud</h2>
+      <p class="lead">Se guarda sola en este navegador. Puedes cargar un ejemplo para ver cómo queda.</p>
+    </div>
+    <Asistente client:load />
+  </section>
+
+  <section class="envoltura bloque" aria-labelledby="agentes-titulo">
+    <div class="agentes">
+      <div>
+        <h2 id="agentes-titulo" class="h-seccion">¿Trabajas con un agente de IA?</h2>
+        <p class="lead">Hay una skill con la misma lógica. Le das a tu agente el plan de rodaje, te pregunta los datos que falten y genera los mismos formatos.</p>
+        <a class="boton grande" href="/agentes/">Ver la skill para agentes de IA</a>
+      </div>
+      <figure class="prompt" aria-label="Ejemplo de conversación con un agente de IA">
+        <p><span class="quien">Tú</span>Necesito el permiso para grabar un videoclip el 5 de diciembre en el Bulevar del Río. Te adjunto el plan de rodaje.</p>
+        <p><span class="quien">Agente de IA</span>Ya tengo locación, horarios y equipo. Me faltan los documentos de los dos responsables y cuántos m² vas a ocupar. Debes radicar a más tardar el viernes 6 de noviembre.</p>
+      </figure>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { background: var(--night); color: var(--night-ink); position: relative; overflow: hidden; margin-top: -4rem; padding-top: 4rem; }
+  .hero::before {
+    content: ''; position: absolute; inset: auto -10% -40% 40%; height: 120%;
+    background: radial-gradient(closest-side, rgb(245 158 11 / 0.22), transparent 70%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background-image: linear-gradient(rgb(255 255 255 / 0.035) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 0.035) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: linear-gradient(to bottom, black 30%, transparent 95%);
+  }
+  .hero-in { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 3.5rem; align-items: center; padding-block: 5.5rem 6rem; }
+  .hero .lead { color: var(--night-ink-2); margin-top: 1.5rem; }
+  .pastilla { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; color: var(--night-ink-2); border: 1px solid var(--night-line); background: rgb(255 255 255 / 0.03); border-radius: 999px; padding: 0.3rem 0.8rem; margin-bottom: 1.75rem; }
+  .punto { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px rgb(245 158 11 / 0.2); }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2.25rem; }
+  .hero-sec { background: transparent; color: var(--night-ink); border-color: var(--night-line); }
+  .hero-sec:hover { background: rgb(255 255 255 / 0.06); border-color: #3f3f46; }
+  .hero-nota { font-size: 0.8125rem; color: var(--night-ink-2); margin: 1rem 0 0; }
+  .hero-copia { animation: entra 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  .hero-widget { animation: entra 700ms 120ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  @keyframes entra { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+  .bloque { margin-top: 7rem; }
+  .bloque-cab { display: grid; gap: 1rem; max-width: 46rem; margin-bottom: 2.75rem; }
+  .bloque-cab .lead { margin: 0; }
+
+  .pasos-3 { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; counter-reset: p; }
+  .pasos-3 li { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 1.75rem; display: grid; gap: 0.75rem; align-content: start; }
+  .pasos-3 p { margin: 0; color: var(--ink-2); font-size: 0.95rem; }
+  .paso-n { width: 2rem; height: 2rem; border-radius: 50%; display: grid; place-content: center; background: var(--accent-soft); color: var(--accent-deep); font-weight: 600; font-size: 0.875rem; }
+
+  .docs { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; }
+  .doc { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; display: grid; grid-template-rows: auto 1fr; transition: transform 200ms ease, box-shadow 200ms ease; }
+  .doc:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+  .doc { display: block; }
+  .doc-enlace { display: grid; grid-template-rows: auto 1fr; height: 100%; color: inherit; text-decoration: none; border-radius: inherit; }
+  .doc-enlace:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .doc-enlace .doc-info { display: flex; flex-direction: column; align-items: flex-start; }
+  .doc-descarga { display: inline-flex; align-self: stretch; align-items: center; gap: 0.35rem; margin-top: auto; padding-top: 0.75rem; border-top: 1px solid var(--line); font-size: 0.8125rem; font-weight: 500; color: var(--ink-2); }
+  .doc-espacio { flex: 1; min-height: 0.75rem; }
+  .doc:hover .doc-descarga { color: var(--accent-deep); }
+  .doc-hoja { background: var(--surface-2); padding: 1.25rem 1.25rem 0; display: grid; grid-auto-rows: min-content; gap: 0.45rem; border-bottom: 1px solid var(--line); }
+  .doc-hoja .doc-cab { height: 1.1rem; border-radius: 4px; background: #e7e5e4; margin-bottom: 0.3rem; }
+  .doc-hoja .l { height: 0.4rem; border-radius: 3px; background: #e7e5e4; }
+  .doc-hoja .l.lleno { background: var(--accent); opacity: 0.85; width: 78%; }
+  .doc-hoja .l.corta { width: 55%; }
+  .doc-hoja .l.media { width: 64%; }
+  .doc-hoja .l:last-child { margin-bottom: 1.1rem; }
+  .doc-info { padding: 1.1rem 1.25rem 1.25rem; display: grid; gap: 0.35rem; align-content: start; }
+  .doc-cod { color: var(--ink-3); }
+  .doc-t { font-size: 1rem; letter-spacing: -0.015em; }
+  .doc-info p { margin: 0; font-size: 0.85rem; color: var(--ink-2); line-height: 1.45; }
+  .doc-cuando { justify-self: start; margin-top: 0.4rem; font-size: 0.75rem; font-weight: 500; padding: 0.15rem 0.55rem; border-radius: 999px; background: var(--ok-soft); color: var(--ok); }
+  .doc-cuando.condicional { background: var(--accent-soft); color: var(--accent-deep); }
+
+  .costo { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: clamp(1.5rem, 4vw, 3rem); }
+  .costo .lead { margin: 1rem 0; }
+  .chico { font-size: 0.875rem; margin: 0; }
+  .formula-card { background: var(--night); color: var(--night-ink); border-radius: var(--r-md); padding: 1.75rem; }
+  .formula { font-family: var(--mono); font-size: clamp(0.95rem, 1.6vw, 1.15rem); margin: 0 0 1.5rem; color: var(--night-ink-2); }
+  .formula span { color: var(--accent); }
+  .variables { margin: 0; display: grid; gap: 0.75rem; font-size: 0.875rem; }
+  .variables div { display: grid; grid-template-columns: 4.5rem 1fr; gap: 1rem; border-top: 1px solid var(--night-line); padding-top: 0.75rem; }
+  .variables dt { font-weight: 600; }
+  .variables dd { margin: 0; color: var(--night-ink-2); }
+
+  .agentes { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; background: var(--night); color: var(--night-ink); border-radius: var(--r-lg); padding: clamp(1.5rem, 4vw, 3rem); }
+  .agentes .lead { color: var(--night-ink-2); margin: 1rem 0 1.75rem; }
+  .agentes .boton { background: var(--night-ink); color: var(--night); border-color: var(--night-ink); }
+  .prompt { margin: 0; display: grid; gap: 0.75rem; }
+  .prompt p { margin: 0; background: var(--night-2); border: 1px solid var(--night-line); border-radius: var(--r-md); padding: 1rem 1.1rem; font-size: 0.9rem; color: var(--night-ink-2); }
+  .prompt p:last-child { border-color: rgb(245 158 11 / 0.35); }
+  .quien { display: block; font-size: 0.75rem; font-weight: 600; color: var(--night-ink); margin-bottom: 0.3rem; }
+
+
+  .hero-foto { position: absolute; inset: 0; z-index: 0; }
+  .hero-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 65% 50%; opacity: 0.85; filter: saturate(1.1) contrast(1.05); }
+  .hero-foto::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, var(--night) 0%, rgb(12 12 14 / 0.82) 36%, rgb(12 12 14 / 0.12) 72%, rgb(12 12 14 / 0.3) 100%), linear-gradient(to top, var(--night) 0%, transparent 30%); }
+  .hero-credito { position: relative; z-index: 1; margin: -3.25rem auto 0; padding-bottom: 1.25rem; font-size: 0.75rem; color: rgb(244 244 245 / 0.45); text-align: right; }
+
+  .galeria-titulo { margin-bottom: 1.5rem; }
+  .galeria { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: 15rem 15rem; gap: 0.75rem; }
+  .galeria figure { position: relative; margin: 0; border-radius: var(--r-lg); overflow: hidden; background: var(--surface-2); }
+  .galeria img { width: 100%; height: 100%; object-fit: cover; transition: transform 600ms cubic-bezier(0.2, 0.7, 0.2, 1); }
+  .galeria figure:hover img { transform: scale(1.04); }
+  .galeria figcaption { position: absolute; inset: auto 0 0 0; padding: 2.5rem 1.1rem 1rem; color: #fff; background: linear-gradient(to top, rgb(0 0 0 / 0.72), transparent); display: grid; gap: 0.15rem; font-size: 0.8125rem; line-height: 1.4; }
+  .galeria figcaption strong { font-size: 1rem; font-weight: 600; letter-spacing: -0.01em; }
+  .galeria figcaption span { color: rgb(255 255 255 / 0.78); }
+  .g-a { grid-row: 1 / 3; }
+
+  .excepciones { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 1.5rem 3rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: clamp(1.5rem, 4vw, 2.75rem); }
+  .exc-cab { display: grid; gap: 1rem; align-content: start; }
+  .exc-cab .lead, .exc-cab p { margin: 0; }
+  .exc-lista { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+  .exc-lista li { display: flex; gap: 0.7rem; align-items: flex-start; padding: 0.9rem 1rem; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg); }
+  .exc-lista svg { flex: none; color: var(--ok); margin-top: 0.15rem; }
+  .exc-lista div { display: grid; gap: 0.15rem; }
+  .exc-lista strong { font-size: 0.95rem; font-weight: 600; }
+  .exc-lista span { font-size: 0.85rem; color: var(--ink-2); line-height: 1.45; }
+  .exc-pie { grid-column: 1 / -1; margin: 0; padding-top: 1.25rem; border-top: 1px solid var(--line); font-weight: 500; }
+  .garantias { list-style: none; padding: 0; margin: 0 0 1.5rem; display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+  .garantias li { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 1.1rem 1.25rem; display: grid; gap: 0.35rem; }
+  .garantias span { color: var(--ink-2); font-size: 0.9375rem; }
+  .faq { display: grid; gap: 0.5rem; max-width: 50rem; }
+  .faq details { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 0 1.25rem; }
+  .faq summary { cursor: pointer; font-weight: 500; padding: 1rem 0; list-style: none; display: flex; justify-content: space-between; gap: 1rem; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: '+'; color: var(--ink-3); font-size: 1.25rem; line-height: 1; }
+  .faq details[open] summary::after { content: '−'; }
+  .faq details p { margin: 0 0 1.1rem; color: var(--ink-2); }
+
+  @media (max-width: 64rem) {
+    .docs { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 52rem) {
+    .hero-in { grid-template-columns: 1fr; padding-block: 3.5rem 4rem; gap: 2.5rem; }
+    .pasos-3, .costo, .agentes, .excepciones { grid-template-columns: 1fr; }
+    .exc-lista { grid-template-columns: 1fr; }
+    .docs { grid-template-columns: repeat(2, 1fr); }
+    .bloque { margin-top: 5rem; }
+    .galeria { grid-template-columns: 1fr 1fr; grid-template-rows: 18rem 12rem; }
+    .g-a { grid-row: auto; grid-column: 1 / 3; }
+    .hero-foto img { object-position: 70% 50%; opacity: 0.55; }
+    .hero-credito { margin-top: -2.5rem; }
+  }
+  @media (max-width: 30rem) {
+    .docs { grid-template-columns: 1fr; }
+    .galeria { grid-template-columns: 1fr; grid-template-rows: none; grid-auto-rows: 15rem; }
+    .g-a { grid-column: auto; }
+  }
+</style>

@@ -1,0 +1,8 @@
+# filmincali.joseuribe.dev
+
+> Asistente independiente para preparar el permiso de rodaje en espacio público de Santiago de Cali (Colombia). Genera llenos los formatos oficiales F004 a F008 de la guía de filmaciones. No es un sitio de la Alcaldía ni de la Comisión Fílmica.
+
+- [Skill para agentes](https://filmincali.joseuribe.dev/agentes/): instrucciones de instalación y uso.
+- [SKILL.md](https://filmincali.joseuribe.dev/skill/SKILL.md): instrucciones para el agente.
+- [Paquete de la skill](https://filmincali.joseuribe.dev/skill/permiso-rodaje-cali.zip): SKILL.md, script de Node, esquema JSON, ejemplo y plantillas.
+- [Proceso oficial](https://www.filmincali.com.co/permiso/): fuente de los formatos y pasos.

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://filmincali.joseuribe.dev/sitemap-index.xml

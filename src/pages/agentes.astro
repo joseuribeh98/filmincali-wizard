@@ -1,0 +1,92 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base
+  title="Skill para agentes de IA: permiso de rodaje en Cali"
+  description="Skill gratuita para Claude y otros agentes de IA que prepara la solicitud del permiso de rodaje en espacio público de Cali y llena los formatos F004 a F008."
+  path="/agentes/"
+>
+  <div class="envoltura agentes">
+    <header class="agentes-cab">
+      <p><a href="/">Volver a la solicitud</a></p>
+      <p class="pastilla">Para agentes de IA</p>
+      <h1 class="h-hero">Prepara el permiso con tu agente de IA</h1>
+      <p class="lead">
+        Esta skill tiene las mismas reglas que el asistente web. Le das al agente tu plan de rodaje, desglose u hoja de llamado,
+        él saca de ahí lo que pueda, te pregunta lo que falte y te entrega los formatos llenos con la fecha límite para radicar.
+      </p>
+      <div class="acciones">
+        <a class="boton principal" href="/skill/permiso-rodaje-cali.zip" download>Descargar la skill (.zip)</a>
+        <a class="boton" href="/skill/">Leer SKILL.md</a>
+      </div>
+    </header>
+
+    <section aria-labelledby="instalar">
+      <h2 id="instalar" class="h-seccion">Cómo instalarla</h2>
+      <ol class="pasos">
+        <li><strong>Claude, en la web o en el escritorio:</strong> ve a Configuración, entra a Capacidades y sube el .zip en la sección de Skills.</li>
+        <li><strong>Claude Code:</strong> descomprime el .zip en <code>~/.claude/skills/</code> o en la carpeta <code>.claude/skills/</code> de tu proyecto.</li>
+        <li><strong>Otros agentes:</strong> sirve cualquiera que pueda leer archivos. Para generar los .docx también necesita ejecutar <code>node</code>.</li>
+      </ol>
+    </section>
+
+    <section aria-labelledby="pedir">
+      <h2 id="pedir" class="h-seccion">Un ejemplo</h2>
+      <div class="guion">
+        <p class="personaje">Tú</p>
+        <p>Necesito el permiso para grabar un videoclip el 5 de diciembre en el Bulevar del Río y al otro día en el río Pance. Te adjunto el plan de rodaje.</p>
+        <p class="personaje">Agente de IA</p>
+        <p>Del plan saqué las locaciones, los horarios, el equipo y las escenas. Me faltan los documentos y teléfonos de los dos responsables, el área que van a ocupar en el bulevar y si van a cerrar el paso peatonal. El último día para radicar es el viernes 6 de noviembre.</p>
+      </div>
+    </section>
+
+    <section aria-labelledby="trae">
+      <h2 id="trae" class="h-seccion">Qué hay en el .zip</h2>
+      <dl class="contenido">
+        <div><dt><code>SKILL.md</code></dt><dd>Las instrucciones: cuándo usar la skill, en qué orden trabajar y las reglas del trámite.</dd></div>
+        <div><dt><code>references/esquema.json</code></dt><dd>El modelo de datos de la solicitud, en JSON Schema.</dd></div>
+        <div><dt><code>references/ejemplo.json</code></dt><dd>Un rodaje de ejemplo con dos locaciones.</dd></div>
+        <div><dt><code>references/tramite.md</code></dt><dd>Pasos, normas, contactos y excepciones del trámite, con sus fuentes.</dd></div>
+        <div><dt><code>plantillas/</code></dt><dd>Los formatos F004 a F008 publicados por la Comisión Fílmica, con los espacios en blanco marcados para llenarse.</dd></div>
+        <div><dt><code>scripts/generar.mjs</code></dt><dd>Revisa la solicitud, calcula las fechas y el valor estimado, y genera los .docx.</dd></div>
+      </dl>
+    </section>
+
+    <section aria-labelledby="codigo">
+      <h2 id="codigo" class="h-seccion">Sobre el script</h2>
+      <p>
+        Llenar un .docx sin dañar el formato requiere código, por eso la skill trae un script. Corre solo en tu equipo o en el
+        entorno del agente, no se conecta a internet y solo lee la solicitud y las plantillas que vienen en el .zip. Está sin
+        minificar para que lo puedas revisar, y el código fuente está en
+        <a href="https://github.com/joseuribeh98/filmincali-wizard">GitHub</a>, con el script que arma el .zip a partir de él.
+      </p>
+      <p>
+        Si tu agente no puede ejecutar código, igual puede armar el <code>solicitud.json</code>. Lo abres aquí con «Abrir
+        solicitud.json», revisas los datos y descargas los formatos desde el navegador.
+      </p>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .agentes { display: grid; gap: 4.5rem; padding-top: 3.5rem; }
+  .agentes-cab { display: grid; gap: 1.25rem; justify-items: start; }
+  .agentes-cab p { margin: 0; }
+  .agentes-cab > p:first-child { font-size: 0.875rem; }
+  .pastilla { font-size: 0.8125rem; color: var(--ink-2); border: 1px solid var(--line-2); border-radius: 999px; padding: 0.3rem 0.8rem; }
+  .acciones { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }
+  section h2 { margin-bottom: 1.25rem; }
+  .pasos { display: grid; gap: 0.6rem; padding-left: 1.2rem; max-width: 46rem; color: var(--ink-2); }
+  code { font-family: var(--mono); font-size: 0.85em; background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px; padding: 0.05rem 0.35rem; color: var(--ink); }
+  section > p { margin: 0 0 1rem; max-width: 46rem; color: var(--ink-2); }
+
+  .guion { max-width: 44rem; display: grid; gap: 0.75rem; background: var(--night); border-radius: var(--r-lg); padding: 1.5rem; }
+  .guion p { margin: 0; background: var(--night-2); border: 1px solid var(--night-line); border-radius: var(--r-md); padding: 0.9rem 1.1rem; color: var(--night-ink-2); font-size: 0.9rem; }
+  .guion .personaje { background: none; border: 0; padding: 0.4rem 0 0; color: var(--night-ink); font-weight: 600; font-size: 0.75rem; }
+
+  .contenido { display: grid; margin: 0; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; background: var(--surface); }
+  .contenido div { display: grid; grid-template-columns: 16rem 1fr; gap: 1rem; padding: 1rem 1.25rem; border-top: 1px solid var(--line); }
+  .contenido div:first-child { border-top: 0; }
+  .contenido dd { margin: 0; color: var(--ink-2); font-size: 0.95rem; }
+  @media (max-width: 40rem) { .contenido div { grid-template-columns: 1fr; gap: 0.3rem; } }
+</style>

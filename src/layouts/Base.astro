@@ -1,0 +1,130 @@
+---
+import '../styles/global.css';
+import fotos from '../lib/fotos.json';
+
+interface Props { title: string; description: string; path?: string; oscuro?: boolean; imagen?: string; faq?: { p: string; r: string }[] }
+const { title, description, path = '/', oscuro = false, imagen = '/fotos/rodaje-1000.webp', faq } = Astro.props;
+const canonical = new URL(path, Astro.site).toString();
+const ogImagen = new URL(imagen, Astro.site).toString();
+const ld: Record<string, unknown>[] = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'Permiso de rodaje en Cali',
+    url: new URL('/', Astro.site).toString(),
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Web',
+    inLanguage: 'es-CO',
+    description: 'Herramienta independiente para llenar los formatos F004 a F008 del permiso de rodaje en espacio público de Santiago de Cali.',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'COP' },
+    author: { '@type': 'Person', name: 'Jose Uribe', url: 'https://joseuribe.dev' },
+    areaServed: { '@type': 'City', name: 'Santiago de Cali' },
+  },
+];
+if (faq?.length) ld.push({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.p, acceptedAnswer: { '@type': 'Answer', text: f.r } })),
+});
+---
+<!doctype html>
+<html lang="es-CO">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#0c0c0e" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="es_CO" />
+    <meta property="og:site_name" content="Permiso de rodaje en Cali" />
+    <meta property="og:image" content={ogImagen} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImagen} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+    <meta name="author" content="Jose Uribe" />
+  </head>
+  <body>
+    <header class:list={['barra', { oscuro }]}>
+      <div class="envoltura barra-in">
+        <a class="marca" href="/">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="10" width="18" height="11" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 10 19.6 5.3l1.2 3.9" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m8 8.6 2.4 1.4M12.6 7.2 15 8.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <span>Permiso de rodaje <span class="marca-ciudad">Cali</span></span>
+        </a>
+        <nav aria-label="Secciones">
+          <a href="/#como-funciona">Cómo funciona</a>
+          <a href="/agentes/">Para agentes de IA</a>
+          <a href="https://github.com/joseuribeh98/filmincali-wizard" class="nav-gh">Código</a>
+          <a class="boton chico" href="/#solicitud">Empezar</a>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="pie">
+      <div class="envoltura pie-in">
+        <div>
+          <p class="pie-marca">Permiso de rodaje Cali</p>
+          <p class="muted">Herramienta independiente hecha por <a href="https://joseuribe.dev">Jose Uribe</a>. No es un servicio de la Alcaldía de Santiago de Cali ni de la Comisión Fílmica.</p>
+        </div>
+        <div class="muted pie-legal">
+          <p>Tus datos se procesan en tu navegador y no se envían a ningún servidor. Sin analítica ni cookies. <a href="https://github.com/joseuribeh98/filmincali-wizard">Código abierto en GitHub</a>. La herramienta no radica la solicitud ni garantiza su aprobación.</p>
+          <p>Fotos de Unsplash:
+            {fotos.map((f, i) => (
+              <>{i > 0 && '; '}<a href={f.fuente}>{f.titulo}</a>, de <a href={f.perfil}>{f.autor}</a></>
+            ))}.
+          </p>
+          <p>Fuente de los formatos y del proceso: <a href="https://www.filmincali.com.co/permiso/" rel="noopener">filmincali.com.co</a>. Dudas oficiales: filmincali@cali.gov.co.</p>
+        </div>
+      </div>
+    </footer>
+    <script>
+      // Todo enlace a otro dominio abre en pestaña nueva y lleva el icono de enlace externo.
+      const marcar = (raiz: ParentNode) => {
+        raiz.querySelectorAll<HTMLAnchorElement>('a[href^="http"]').forEach((a) => {
+          if (a.host === location.host || a.dataset.externo) return;
+          a.dataset.externo = '1';
+          a.target = '_blank';
+          a.rel = [...new Set([...(a.rel ? a.rel.split(' ') : []), 'noopener', 'noreferrer'])].join(' ');
+          a.classList.add('externo');
+          const sr = document.createElement('span');
+          sr.className = 'sr-only';
+          sr.textContent = ' (abre en una pestaña nueva)';
+          a.append(sr);
+        });
+      };
+      marcar(document);
+      new MutationObserver(() => marcar(document)).observe(document.body, { childList: true, subtree: true });
+    </script>
+  </body>
+</html>
+
+<style>
+  .barra { position: sticky; top: 0; z-index: 20; background: rgb(250 250 249 / 0.82); backdrop-filter: saturate(1.4) blur(12px); border-bottom: 1px solid var(--line); }
+  .barra.oscuro { background: rgb(12 12 14 / 0.78); border-bottom-color: var(--night-line); color: var(--night-ink); }
+  .barra-in { display: flex; align-items: center; justify-content: space-between; gap: 1rem; height: 4rem; }
+  .marca { display: inline-flex; align-items: center; gap: 0.6rem; font-weight: 600; letter-spacing: -0.02em; text-decoration: none; }
+  .marca-ciudad { color: var(--accent); }
+  .barra.oscuro .marca-ciudad { color: var(--accent); }
+  .barra nav { display: flex; align-items: center; gap: 1.5rem; font-size: 0.9rem; }
+  .barra nav a:not(.boton) { text-decoration: none; color: inherit; opacity: 0.75; }
+  .barra nav a:not(.boton):hover { opacity: 1; }
+  .barra.oscuro .boton { background: var(--night-ink); color: var(--night); border-color: var(--night-ink); }
+  .pie { border-top: 1px solid var(--line); margin-top: 6rem; padding-block: 3rem; font-size: 0.875rem; }
+  .pie-in { display: grid; grid-template-columns: 1fr 1.4fr; gap: 2rem; }
+  .pie-marca { font-weight: 600; margin-bottom: 0.4rem; }
+  .pie-legal p:last-child { margin: 0; }
+  @media (max-width: 44rem) {
+    .barra nav a:not(.boton) { display: none; }
+    .pie-in { grid-template-columns: 1fr; }
+  }
+</style>

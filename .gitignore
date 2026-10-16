@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.astro/
+skill-dist/
+public/skill/
+tools/__pycache__/
+.DS_Store
+shots/
+.wrangler/
+.dev.vars

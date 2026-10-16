@@ -1,0 +1,156 @@
+{
+  "proyecto": {
+    "nombre": "Brisa de Río (videoclip de ejemplo)",
+    "tipo": "videoclip",
+    "artista": "Banda de Ejemplo",
+    "cancion": "Brisa de Río",
+    "naturaleza": "nacional",
+    "sinopsis": "Una banda toca al atardecer en el Bulevar del Río mientras una bailarina recorre la ciudad hasta llegar al río Pance.",
+    "escenas": "Planos generales de la banda tocando sobre el bulevar, recorridos con steadicam de la bailarina entre peatones y planos de cierre en la orilla del río Pance. Sin escenas de riesgo."
+  },
+  "responsables": {
+    "filmacion": {
+      "tipoPersona": "juridica",
+      "tipoDocumento": "nit",
+      "documento": "900000000-0",
+      "nombre": "Ana Ejemplo",
+      "empresa": "Productora Ejemplo S.A.S.",
+      "cargo": "Productora general",
+      "telefono": "300 000 0000",
+      "correo": "produccion@ejemplo.co"
+    },
+    "locacion": {
+      "tipoPersona": "natural",
+      "tipoDocumento": "cc",
+      "documento": "1000000000",
+      "nombre": "Luis Ejemplo",
+      "empresa": "Productora Ejemplo S.A.S.",
+      "cargo": "Jefe de locaciones",
+      "telefono": "301 000 0000",
+      "correo": "locaciones@ejemplo.co"
+    }
+  },
+  "solicitanteDireccion": "Calle 0 # 00-00, Cali",
+  "exencion": {
+    "tipo": "ninguna"
+  },
+  "personas": {
+    "equipo": 18,
+    "extras": 6,
+    "aglomeracion": 0
+  },
+  "riesgos": {
+    "efectos": []
+  },
+  "locaciones": [
+    {
+      "nombre": "Bulevar del Río",
+      "barrio": "San Antonio",
+      "direccion": "Av. Colombia con Calle 12",
+      "mapsUrl": "https://maps.google.com/?q=3.4516,-76.5320",
+      "zona": "urbano",
+      "uso": "set",
+      "tiposEspacio": [
+        "alamedas",
+        "andenes"
+      ],
+      "areaM2": 120,
+      "elementos": {
+        "vanes": 2,
+        "plantas": 1,
+        "tripodes": 4,
+        "luminotecnia": 1,
+        "carpas": 2
+      },
+      "jornadas": [
+        {
+          "fecha": "2026-12-05",
+          "actividad": "montaje",
+          "horaInicio": "13:00",
+          "horaFin": "15:00"
+        },
+        {
+          "fecha": "2026-12-05",
+          "actividad": "filmacion",
+          "horaInicio": "15:00",
+          "horaFin": "19:00"
+        },
+        {
+          "fecha": "2026-12-05",
+          "actividad": "desmontaje",
+          "horaInicio": "19:00",
+          "horaFin": "20:00"
+        }
+      ],
+      "movilidad": {
+        "afectaciones": [
+          "pea_parcial_inter"
+        ],
+        "sentido": "No aplica (zona peatonal)",
+        "costado": "Costado del río",
+        "implementacion": "Cierre peatonal parcial e intermitente durante las tomas, máximo 3 minutos por toma, con dos auxiliares de producción y conos reflectivos. El paso peatonal se mantiene por el costado opuesto.",
+        "senalizacion": "6 conos reflectivos, 2 vallas tipo barrera y 2 paletas pare/siga.",
+        "cargueDescargue": "Bahía sobre la Calle 12, frente a la plazoleta.",
+        "parqueo": "Parqueadero privado cercano para las 2 vanes."
+      },
+      "escala": "anden"
+    },
+    {
+      "nombre": "Orilla del río Pance",
+      "barrio": "Corregimiento de Pance",
+      "direccion": "Vía al Pance, km 0",
+      "mapsUrl": "https://maps.google.com/?q=3.3270,-76.5900",
+      "zona": "rural",
+      "uso": "set",
+      "tiposEspacio": [
+        "natural"
+      ],
+      "areaM2": 40,
+      "elementos": {
+        "vanes": 1,
+        "tripodes": 2
+      },
+      "jornadas": [
+        {
+          "fecha": "2026-12-06",
+          "actividad": "filmacion",
+          "horaInicio": "06:00",
+          "horaFin": "09:00"
+        }
+      ],
+      "natural": {
+        "nombreArea": "Río Pance",
+        "actividades": "Planos de la bailarina en la orilla, sin entrar al cauce. Equipo reducido de 8 personas, sin plantas eléctricas.",
+        "impactos": []
+      },
+      "escala": "regional"
+    }
+  ],
+  "ambiental": {
+    "residuosTipos": "Residuos aprovechables (botellas, cartón de catering) y orgánicos del refrigerio, en cantidad baja: dos bolsas por jornada.",
+    "residuosEstrategia": "Puntos de separación en la base, retiro total al cierre de cada jornada y entrega a una organización de recicladores.",
+    "ruidoAmplificacion": {
+      "cantidad": 1,
+      "tipo": "Parlante de playback de baja potencia"
+    },
+    "ruidoPlantas": {
+      "cantidad": 1,
+      "tipo": "Planta silenciosa 3 kVA"
+    },
+    "ruidoVehiculos": {
+      "cantidad": 2,
+      "tipo": "Vanes de producción"
+    },
+    "ruidoMitigacion": "Playback a volumen bajo y planta ubicada lejos de viviendas.",
+    "sensibles": "No se identifican hospitales ni colegios cercanos.",
+    "medidasAcusticas": "Ubicación estratégica de equipos y reducción del volumen en ensayos."
+  },
+  "socializacion": {
+    "estrategias": "Volanteo puerta a puerta en la cuadra dos días antes y reunión con la Junta de Acción Comunal de San Antonio.",
+    "impactoPositivo": "Contratación de catering local y agradecimiento a la comunidad en los créditos."
+  },
+  "notificacion": {
+    "autoriza": true,
+    "correo": "produccion@ejemplo.co"
+  }
+}
