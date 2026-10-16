@@ -163,3 +163,9 @@ input::placeholder, textarea::placeholder { color: #a1a1aa; }
 .saltar { position: absolute; left: 1rem; top: -4rem; z-index: 100; background: var(--ink); color: #fff; padding: 0.6rem 1rem; border-radius: 8px; font-weight: 500; text-decoration: none; }
 .saltar:focus { top: 1rem; }
 main:focus { outline: none; }
+
+/* En iOS un campo con letra menor a 16px hace zoom al enfocarlo. */
+@media (max-width: 56rem) {
+  input[type='text'], input[type='email'], input[type='tel'], input[type='url'],
+  input[type='number'], input[type='date'], input[type='time'], select, textarea { font-size: 16px; }
+}

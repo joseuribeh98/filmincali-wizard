@@ -186,8 +186,8 @@
 
 /* ---------- móvil ---------- */
 @media (max-width: 56rem) {
-  .asistente { grid-template-columns: 1fr; }
-  .indice { border-right: 0; border-bottom: 1px solid var(--line); padding: 0.75rem; gap: 0.75rem; }
+  .asistente { grid-template-columns: minmax(0, 1fr); }
+  .indice { min-width: 0; border-right: 0; border-bottom: 1px solid var(--line); padding: 0.75rem; gap: 0.75rem; }
   .indice ol { display: flex; overflow-x: auto; gap: 0.25rem; scrollbar-width: none; scroll-snap-type: x mandatory; }
   .indice ol::-webkit-scrollbar { display: none; }
   .indice li { flex: 0 0 auto; scroll-snap-align: start; }
@@ -196,9 +196,21 @@
   .herramientas { display: flex; flex-wrap: wrap; margin: 0; padding: 0; }
   .par, .trio, .sinos { grid-template-columns: 1fr; }
   .campo.corto { max-width: none; }
-  .jornadas .fila { grid-template-columns: 1fr 1fr; }
+  .jornadas .fila { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0.6rem 0.5rem; padding: 0.75rem; }
   .jornadas .fila.cab { display: none; }
-  .quitar { justify-self: start; }
+  .jornadas .celda { display: grid; gap: 0.25rem; min-width: 0; }
+  .jornadas .celda[data-etiqueta='Fecha'], .jornadas .celda[data-etiqueta='Actividad'] { grid-column: 1 / -1; }
+  .jornadas input, .jornadas select { font-size: 16px; height: 2.6rem; }
+  .ficha { padding: 1rem 0.85rem; }
+  .jornadas .celda::before { content: attr(data-etiqueta); font-size: 0.75rem; font-weight: 500; color: var(--ink-3); }
+  .fila-acciones { grid-column: 1 / -1; justify-content: flex-end; margin-top: -0.25rem; }
+  .elementos { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.4rem; }
+  .elemento { gap: 0.45rem; padding: 0.3rem 0.4rem 0.3rem 0.3rem; }
+  .elemento input { width: 2.6rem; }
+  .elemento span { font-size: 0.8rem; }
+  .herramientas { gap: 0; }
+  .herramientas .boton { font-size: 0.8125rem; padding-inline: 0.6rem; }
+  .pliego { padding: 1.25rem 1rem; }
 }
 
 /* ---------- modal de confirmación ---------- */
@@ -223,4 +235,14 @@
 .aviso-excepcion a { font-weight: 500; }
 
 .celda { display: contents; }
+.jornadas .celda > * { min-width: 0; width: 100%; }
 .pasos mark { background: #fef08a; color: inherit; padding: 0 0.15em; border-radius: 3px; }
+
+/* Ningún hijo de la rejilla puede ensanchar el paso más que la pantalla. */
+.pliego > *, .rejilla > *, .ficha > * { min-width: 0; }
+.casilla { min-width: 0; }
+.casilla > span { min-width: 0; overflow-wrap: anywhere; }
+@media (max-width: 56rem) {
+  .pliego .boton { max-width: 100%; white-space: normal; text-align: center; height: auto; min-height: 2.5rem; padding-block: 0.55rem; line-height: 1.3; }
+  .pliego .acciones .boton { flex: 1 1 100%; }
+}

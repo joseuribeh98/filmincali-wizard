@@ -68,6 +68,15 @@ export default function Asistente() {
   const tieneDatos = () => JSON.stringify(e) !== JSON.stringify(estadoVacio());
   const archivo = useRef<HTMLInputElement>(null);
   const cima = useRef<HTMLDivElement>(null);
+  const pestanas = useRef<HTMLOListElement>(null);
+
+  // En móvil los pasos son una tira horizontal: centra el paso actual.
+  useEffect(() => {
+    const ol = pestanas.current;
+    const el = ol?.querySelector<HTMLElement>('.pestaña.actual')?.parentElement;
+    if (!ol || !el || ol.scrollWidth <= ol.clientWidth) return;
+    ol.scrollTo({ left: el.offsetLeft - (ol.clientWidth - el.offsetWidth) / 2, behavior: 'smooth' });
+  }, [paso]);
 
   useEffect(() => {
     try {
@@ -137,7 +146,7 @@ export default function Asistente() {
   return (
     <div class="asistente" ref={cima}>
       <nav class="indice" aria-label="Pasos de la solicitud">
-        <ol>
+        <ol ref={pestanas}>
           {PLIEGOS.map((p, i) => {
             const omitido = p.id === 'movilidad' && !conMovilidad.some(Boolean);
             return (
@@ -348,14 +357,14 @@ function Locaciones({ e, set, setE, pedir }: P & { setE: (fn: (prev: Estado) => 
                     const rj: Ruta = [...r, 'jornadas', k];
                     return (
                       <div class="fila" role="row" key={k}>
-                        <span role="cell" class="celda"><input aria-label={`Fecha, jornada ${k + 1}`} type="date" value={j.fecha} onInput={(ev) => set([...rj, 'fecha'], (ev.currentTarget as HTMLInputElement).value)} /></span>
-                        <span role="cell" class="celda"><select aria-label={`Actividad, jornada ${k + 1}`} value={j.actividad} onChange={(ev) => set([...rj, 'actividad'], (ev.currentTarget as HTMLSelectElement).value)}>
+                        <span role="cell" class="celda" data-etiqueta="Fecha"><input aria-label={`Fecha, jornada ${k + 1}`} type="date" value={j.fecha} onInput={(ev) => set([...rj, 'fecha'], (ev.currentTarget as HTMLInputElement).value)} /></span>
+                        <span role="cell" class="celda" data-etiqueta="Actividad"><select aria-label={`Actividad, jornada ${k + 1}`} value={j.actividad} onChange={(ev) => set([...rj, 'actividad'], (ev.currentTarget as HTMLSelectElement).value)}>
                           <option value="montaje">Montaje</option>
                           <option value="filmacion">Filmación</option>
                           <option value="desmontaje">Desmontaje</option>
                         </select></span>
-                        <span role="cell" class="celda"><input aria-label={`Hora inicial, jornada ${k + 1}`} type="time" value={j.horaInicio} onInput={(ev) => set([...rj, 'horaInicio'], (ev.currentTarget as HTMLInputElement).value)} /></span>
-                        <span role="cell" class="celda"><input aria-label={`Hora final, jornada ${k + 1}`} type="time" value={j.horaFin} onInput={(ev) => set([...rj, 'horaFin'], (ev.currentTarget as HTMLInputElement).value)} /></span>
+                        <span role="cell" class="celda" data-etiqueta="Inicio"><input aria-label={`Hora inicial, jornada ${k + 1}`} type="time" value={j.horaInicio} onInput={(ev) => set([...rj, 'horaInicio'], (ev.currentTarget as HTMLInputElement).value)} /></span>
+                        <span role="cell" class="celda" data-etiqueta="Fin"><input aria-label={`Hora final, jornada ${k + 1}`} type="time" value={j.horaFin} onInput={(ev) => set([...rj, 'horaFin'], (ev.currentTarget as HTMLInputElement).value)} /></span>
                         <span class="fila-acciones" role="cell">
                           <button type="button" class="icono" title="Duplicar para el día siguiente" aria-label={`Duplicar jornada ${k + 1} para el día siguiente`}
                             onClick={() => { const js = [...l.jornadas]; js.splice(k + 1, 0, { ...j, fecha: diaSiguiente(j.fecha) }); set([...r, 'jornadas'], ordenar(js)); }}>

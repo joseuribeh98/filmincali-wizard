@@ -85,6 +85,14 @@ const docs = [
     </div>
   </section>
 
+  <section class="envoltura bloque" id="solicitud" aria-labelledby="solicitud-titulo">
+    <div class="bloque-cab">
+      <h2 id="solicitud-titulo" class="h-seccion">Tu solicitud</h2>
+      <p class="lead">Se guarda sola en este navegador. Puedes cargar un ejemplo para ver cómo queda.</p>
+    </div>
+    <Asistente client:visible />
+  </section>
+
   <section class="envoltura bloque" id="como-funciona" aria-labelledby="como-titulo">
     <div class="bloque-cab">
       <h2 id="como-titulo" class="h-seccion">Cómo funciona</h2>
@@ -205,14 +213,6 @@ const docs = [
         </details>
       ))}
     </div>
-  </section>
-
-  <section class="envoltura bloque" id="solicitud" aria-labelledby="solicitud-titulo">
-    <div class="bloque-cab">
-      <h2 id="solicitud-titulo" class="h-seccion">Tu solicitud</h2>
-      <p class="lead">Se guarda sola en este navegador. Puedes cargar un ejemplo para ver cómo queda.</p>
-    </div>
-    <Asistente client:visible />
   </section>
 
   <section class="envoltura bloque" aria-labelledby="agentes-titulo">
@@ -352,7 +352,9 @@ const docs = [
   @media (max-width: 52rem) {
     .hero-in { grid-template-columns: 1fr; padding-block: 3.5rem 4rem; gap: 2.5rem; }
     .pasos-3, .costo, .agentes, .excepciones { grid-template-columns: 1fr; }
-    .exc-lista { grid-template-columns: 1fr; }
+    .exc-lista { grid-template-columns: 1fr; gap: 0.45rem; }
+    .exc-lista li { padding: 0.7rem 0.85rem; }
+    .exc-lista span { font-size: 0.8125rem; }
     .docs { grid-template-columns: repeat(2, 1fr); }
     .bloque { margin-top: 5rem; }
     .galeria { grid-template-columns: 1fr 1fr; grid-template-rows: 18rem 12rem; }
