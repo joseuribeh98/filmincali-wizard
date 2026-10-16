@@ -143,7 +143,7 @@ export default function Asistente() {
             return (
               <li key={p.id}>
                 <button type="button" class={`pestaña ${i === paso ? 'actual' : ''} ${i < paso ? 'hecho' : ''}`} aria-current={i === paso ? 'step' : undefined} onClick={() => ir(i)}>
-                  <span class="num" aria-hidden="true">{i < paso ? '✓' : i + 1}</span>
+                  <span class="num" aria-hidden="true">{i < paso ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg> : i + 1}</span>
                   <span class="nom">{p.titulo}</span>
                   {p.formatos.length > 0 && <span class="cod">{p.formatos.join(' ')}</span>}
                   {omitido && <span class="cod">no aplica</span>}
@@ -362,7 +362,7 @@ function Locaciones({ e, set, setE, pedir }: P & { setE: (fn: (prev: Estado) => 
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2" /><path d="M4 16V5a1 1 0 0 1 1-1h11" /></svg>
                           </button>
                           <button type="button" class="quitar" aria-label={`Quitar jornada ${k + 1}`} disabled={l.jornadas.length === 1}
-                            onClick={() => set([...r, 'jornadas'], l.jornadas.filter((_, x) => x !== k))}>×</button>
+                            onClick={() => set([...r, 'jornadas'], l.jornadas.filter((_, x) => x !== k))}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12" /></svg></button>
                         </span>
                       </div>
                     );

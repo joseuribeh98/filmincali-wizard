@@ -119,7 +119,7 @@
 .jornadas .fila > * { min-width: 0; }
 .jornadas input, .jornadas select { height: 2.4rem; font-size: 0.875rem; padding-inline: 0.55rem; box-shadow: none; }
 .jornadas select { padding-right: 2rem; }
-.quitar { font-size: 1.2rem; line-height: 1; color: var(--ink-3); border: 0; background: none; cursor: pointer; border-radius: 6px; height: 2.25rem; }
+.quitar { display: inline-grid; place-items: center; min-width: 2.25rem; line-height: 1; color: var(--ink-3); border: 0; background: none; cursor: pointer; border-radius: 6px; height: 2.25rem; }
 .quitar:hover { background: var(--danger-soft); color: var(--danger); }
 .quitar[disabled] { opacity: 0.3; cursor: default; background: none; color: var(--ink-3); }
 

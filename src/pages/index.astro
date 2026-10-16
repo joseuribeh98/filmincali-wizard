@@ -64,18 +64,24 @@ const docs = [
   <section class="envoltura bloque" id="excepciones" aria-labelledby="exc-titulo">
     <div class="excepciones">
       <div class="exc-cab">
-        <h2 id="exc-titulo" class="h-seccion">Antes de empezar: ¿necesitas el permiso?</h2>
-        <p class="lead">La guía de filmaciones exceptúa seis tipos de proyecto. Si el tuyo es uno de estos, no tienes que hacer el trámite.</p>
+        <h2 id="exc-titulo" class="h-seccion">Antes de empezar: seis casos que no necesitan permiso</h2>
+        <p class="lead">La guía de filmaciones deja por fuera del trámite estos tipos de proyecto. Si el tuyo es uno de ellos, no tienes que radicar nada.</p>
         <p class="muted chico">Fuente: <a href="https://www.filmincali.com.co/wp-content/uploads/2025/10/Res_4132.030.21.1-1_de_2025_filmaciones-con-anexos.pdf">Resolución 4132.030.21.1-7 de 2025</a>, artículo 7, numeral 1. Si tienes dudas sobre tu caso, escribe a filmincali@cali.gov.co.</p>
       </div>
-      <ul class="exc-lista">
+      <div class="exc-cuerpo">
+      <p class="exc-etiqueta" id="exc-etiqueta">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="m5.6 5.6 12.8 12.8" /></svg>
+        Exceptuados del permiso
+      </p>
+      <ul class="exc-lista" aria-labelledby="exc-etiqueta">
         {excepciones.map((x) => (
           <li>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="m5.6 5.6 12.8 12.8" /></svg>
             <div><strong>{x.t}</strong><span>{x.d}</span></div>
           </li>
         ))}
       </ul>
+      </div>
       <p class="exc-pie">Si tu rodaje no encaja en ninguno de estos casos, sí necesitas el permiso. <a href="#solicitud">Empieza la solicitud</a></p>
     </div>
   </section>
@@ -194,7 +200,7 @@ const docs = [
     <div class="faq">
       {faq.map((f) => (
         <details>
-          <summary>{f.p}</summary>
+          <summary>{f.p}<svg class="faq-icono" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg></summary>
           <p>{f.r}</p>
         </details>
       ))}
@@ -322,7 +328,9 @@ const docs = [
   .exc-cab .lead, .exc-cab p { margin: 0; }
   .exc-lista { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
   .exc-lista li { display: flex; gap: 0.7rem; align-items: flex-start; padding: 0.9rem 1rem; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--bg); }
-  .exc-lista svg { flex: none; color: var(--ok); margin-top: 0.15rem; }
+  .exc-cuerpo { display: grid; gap: 0.75rem; align-content: start; }
+  .exc-etiqueta { margin: 0; display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; color: var(--ink-2); }
+  .exc-lista svg { flex: none; color: var(--ink-3); margin-top: 0.15rem; }
   .exc-lista div { display: grid; gap: 0.15rem; }
   .exc-lista strong { font-size: 0.95rem; font-weight: 600; }
   .exc-lista span { font-size: 0.85rem; color: var(--ink-2); line-height: 1.45; }
@@ -334,8 +342,8 @@ const docs = [
   .faq details { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 0 1.25rem; }
   .faq summary { cursor: pointer; font-weight: 500; padding: 1rem 0; list-style: none; display: flex; justify-content: space-between; gap: 1rem; }
   .faq summary::-webkit-details-marker { display: none; }
-  .faq summary::after { content: '+'; color: var(--ink-3); font-size: 1.25rem; line-height: 1; }
-  .faq details[open] summary::after { content: '−'; }
+  .faq-icono { flex: none; color: var(--ink-3); margin-top: 0.1rem; transition: transform 0.2s ease; }
+  .faq details[open] .faq-icono { transform: rotate(45deg); }
   .faq details p { margin: 0 0 1.1rem; color: var(--ink-2); }
 
   @media (max-width: 64rem) {
