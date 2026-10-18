@@ -8,7 +8,7 @@ description: Prepara la solicitud de permiso de rodaje en espacio público de Sa
 Esta skill convierte la información de una producción en los formatos oficiales que pide la Alcaldía de Santiago de Cali para autorizar el aprovechamiento económico del espacio público en filmaciones. Hace tres cosas:
 
 1. Arma un `solicitud.json` con un modelo único (cada dato se pide una sola vez).
-2. Revisa coherencia, plazos y anexos con `scripts/generar.mjs --revisar`.
+2. Revisa coherencia, plazos y anexos con `scripts/generate.mjs --check`.
 3. Genera los .docx oficiales llenos y un .zip con `LEEME.txt` y la solicitud.
 
 Es una herramienta independiente, hecha por Jose Uribe (joseuribe.dev). No es de la Alcaldía ni de la Comisión Fílmica. Dilo así al usuario y no prometas aprobación. El código es abierto: https://github.com/joseuribeh98/filmincali-wizard
@@ -19,37 +19,37 @@ Node.js 18 o superior. El script trae todo empaquetado; no hay que instalar nada
 
 ## Flujo
 
-0. **Confirma que el permiso aplica.** No se tramita para periodismo de última hora, cámara en mano sin intervenir el tránsito ni estacionar vehículos, fotografía, proyecciones, espectáculos o eventos culturales, ni BTL que no termine en un comercial (detalle en `references/tramite.md`). Si el proyecto encaja en uno de esos casos, díselo al usuario antes de pedir datos.
+0. **Confirma que el permiso aplica.** No se tramita para periodismo de última hora, cámara en mano sin intervenir el tránsito ni estacionar vehículos, fotografía, proyecciones, espectáculos o eventos culturales, ni BTL que no termine en un comercial (detalle en `references/process.md`). Si el proyecto encaja en uno de esos casos, díselo al usuario antes de pedir datos.
 1. **Reúne lo que el usuario ya tiene.** Pide el plan de rodaje, el desglose de producción, la hoja de llamado o un correo con los datos. Extrae de ahí todo lo que puedas antes de preguntar.
-2. **Llena `solicitud.json`** siguiendo `references/esquema.json`. Usa `references/ejemplo.json` como guía de forma y tono. Fechas en `AAAA-MM-DD`, horas en `HH:MM`.
+2. **Llena `solicitud.json`** siguiendo `references/schema.json`. Usa `references/example.json` como guía de forma y tono. Las claves y los valores de las listas van en inglés, como en el esquema; los textos libres van en español, porque salen tal cual en los formatos. Fechas en `AAAA-MM-DD`, horas en `HH:MM`.
 3. **Pregunta solo lo que falta**, agrupado por tema, nunca campo por campo. Lo que el modelo no puede inferir y casi siempre falta:
-   - documento, teléfono y correo de los dos responsables;
-   - tipo de espacio público de cada locación (define si hay plan de movilidad);
-   - área ocupada en m2 (set, base y parqueo en espacio público) y conteo de elementos (vanes, plantas, carpas, etc.);
-   - escala de cada locación (`local`, `zonal`, `urbano`, `regional` o `anden`), que define el valor a pagar;
-   - jornadas con montaje, filmación y desmontaje por separado;
+   - documento, teléfono y correo de los dos responsables (`contacts.production` y `contacts.location`);
+   - tipo de espacio público de cada locación (`spaceTypes`, define si hay plan de movilidad);
+   - área ocupada en m2 (`areaM2`: set, base y parqueo en espacio público) y conteo de elementos (`elements`: vanes, plantas, carpas, etc.);
+   - escala de cada locación (`scale`: `local`, `zonal`, `urban`, `regional` o `sidewalk`), que define el valor a pagar;
+   - jornadas con montaje, filmación y desmontaje por separado (`sessions`, con `activity` `setup`, `shoot` o `teardown`);
    - manejo de residuos y estrategia de socialización con la comunidad.
-   No inventes datos personales, documentos ni direcciones. Si el usuario no sabe algo, déjalo vacío: el formato queda con el espacio en blanco para completarlo en Word.
-4. **Revisa:** `node scripts/generar.mjs solicitud.json --revisar`. Devuelve JSON con `formatos`, `plazos`, `retribucionEstimada`, `avisos` (nivel `error` o `alerta`) y `anexos`. Corrige los errores con el usuario.
+   No inventes datos personales, documentos ni direcciones. Si el usuario no sabe algo, déjalo vacío: el formato queda con el espacio en blanco, resaltado en amarillo, para completarlo en Word.
+4. **Revisa:** `node scripts/generate.mjs solicitud.json --check`. Devuelve JSON con `forms`, `deadlines`, `estimatedFee`, `issues` (nivel `error` o `warning`) y `attachments`. Corrige los errores con el usuario.
 5. **Si no puedes ejecutar `node`**, entrega el `solicitud.json` y pide al usuario abrirlo en https://filmincali.joseuribe.dev con «Abrir solicitud.json»: allí se revisan los datos y se descargan los formatos.
-6. **Genera:** `node scripts/generar.mjs solicitud.json --salida permiso-rodaje`. Escribe los .docx y el .zip en la carpeta.
+6. **Genera:** `node scripts/generate.mjs solicitud.json --out permiso-rodaje`. Escribe los .docx y el .zip en la carpeta.
 7. **Entrega** el .zip y resume en pocas líneas: fecha límite para radicar, valor estimado a pagar, formatos incluidos y la lista de anexos que el usuario debe pegar o adjuntar (fotos, planos, firma, cartas).
 
-Rutas relativas a la carpeta de esta skill: `scripts/generar.mjs`, `plantillas/`, `references/`.
+Rutas relativas a la carpeta de esta skill: `scripts/generate.mjs`, `templates/`, `references/`.
 
 ## Reglas del trámite que aplica el script
 
 - **Siempre:** F004 formulario de solicitud, F005 propuesta de ocupación, F007 concepto ambiental, F008 socialización.
-- **F006 plan de movilidad:** solo si alguna locación tiene `corredor_vial`, `andenes` o `ciclorrutas` en `tiposEspacio`, o tiene afectaciones en `movilidad.afectaciones`. En ese caso llena el objeto `movilidad` de esa locación.
-- **Áreas naturales del F007:** se llenan para las locaciones con `natural` en `tiposEspacio`; usa el objeto `natural` de la locación.
+- **F006 plan de movilidad:** solo si alguna locación tiene `road_corridor`, `sidewalks` o `bike_lanes` en `spaceTypes`, o tiene cierres en `mobility.closures`. En ese caso llena el objeto `mobility` de esa locación.
+- **Áreas naturales del F007:** se llenan para las locaciones con `natural` en `spaceTypes`; usa el objeto `naturalArea` de la locación.
 - **Tiempos de la Alcaldía:** con la documentación completa, la SEPOU tiene 15 días hábiles para revisar. Si falta algo, devuelve la solicitud y el solicitante tiene 30 días para completarla. Recomienda radicar lo antes posible dentro de la ventana.
-- **Plazos:** se radica mínimo 20 días hábiles y máximo 3 meses antes del primer día en calle. El script cuenta días hábiles con los festivos de Colombia (Ley Emiliani). Si `plazos.estado` es `tarde`, avisa al usuario que debe hablar con la Comisión Fílmica antes de radicar.
+- **Plazos:** se radica mínimo 20 días hábiles y máximo 3 meses antes del primer día en calle. El script cuenta días hábiles con los festivos de Colombia (Ley Emiliani). Si `deadlines.status` es `late`, avisa al usuario que debe hablar con la Comisión Fílmica antes de radicar.
 - **Valor estimado:** `VR = (A x D x Esc x UVT) / 12` (Resolución 4132.030.21.1-7 de 2025, art. 6). A x D se suma por locación; la escala pesa local 0,4, zonal 0,6, urbana 0,8, regional 1 y andén 2, y si hay varias se usa la de mayor peso. En vías, la escala sigue la jerarquía vial (local: vía local; zonal: colectora; urbana: arteria secundaria; regional: arteria principal o interregional). Preséntalo siempre como estimado: el valor oficial lo notifica la Subdirección de Espacio Público.
-- **Exenciones de pago:** proyectos académicos, comunitarios o con fondos públicos del Distrito. Cumplen el mismo trámite y necesitan una carta o certificación.
-- **Plan de emergencias:** obligatorio si hay efectos especiales, escenas de riesgo o aglomeración (`personas.aglomeracion` > 0).
+- **Exenciones de pago:** proyectos académicos, comunitarios o con fondos públicos del Distrito (`exemption.type`: `academic`, `community` o `public_funds`). Cumplen el mismo trámite y necesitan una carta o certificación.
+- **Plan de emergencias:** obligatorio si hay efectos especiales, escenas de riesgo o aglomeración (`people.crowd` > 0).
 - **Afectación al MIO:** requiere autorización aparte de Metro Cali S.A.
 
-El detalle del proceso, contactos y enlaces oficiales está en `references/tramite.md`.
+El detalle del proceso, contactos y enlaces oficiales está en `references/process.md`.
 
 ## Qué no hace
 
@@ -64,4 +64,4 @@ Las plantillas son los formatos oficiales publicados en filmincali.com.co (versi
 
 ## Editar en la web
 
-El `solicitud.json` es el mismo que usa https://filmincali.joseuribe.dev. El usuario puede abrirlo allí con "Abrir solicitud.json", editarlo en el asistente y volver a descargar.
+El `solicitud.json` es el mismo que usa https://filmincali.joseuribe.dev. El usuario puede abrirlo allí con "Abrir solicitud.json", editarlo en el asistente y volver a descargar. Los archivos de la primera versión, con claves en español, también se abren.

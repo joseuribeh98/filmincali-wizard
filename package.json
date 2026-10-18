@@ -3,13 +3,13 @@
   "type": "module",
   "version": "0.1.0",
   "private": true,
-  "description": "Asistente independiente para preparar el permiso de rodaje en espacio público de Cali.",
+  "description": "Independent tool to prepare the permit for filming in public space in Cali, Colombia.",
   "engines": {
     "node": ">=22.12.0"
   },
   "scripts": {
     "dev": "astro dev",
-    "plantillas": "python3 tools/plantillas.py",
+    "templates": "python3 tools/templates.py",
     "skill": "node tools/build-skill.mjs",
     "build": "npm run skill && astro build",
     "preview": "astro preview",

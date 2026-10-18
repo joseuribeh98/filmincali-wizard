@@ -1,0 +1,156 @@
+{
+  "project": {
+    "name": "Brisa de Río (videoclip de ejemplo)",
+    "type": "music_video",
+    "artist": "Banda de Ejemplo",
+    "song": "Brisa de Río",
+    "origin": "national",
+    "synopsis": "Una banda toca al atardecer en el Bulevar del Río mientras una bailarina recorre la ciudad hasta llegar al río Pance.",
+    "scenes": "Planos generales de la banda tocando sobre el bulevar, recorridos con steadicam de la bailarina entre peatones y planos de cierre en la orilla del río Pance. Sin escenas de riesgo."
+  },
+  "contacts": {
+    "production": {
+      "personType": "legal",
+      "idType": "nit",
+      "idNumber": "900000000-0",
+      "name": "Ana Ejemplo",
+      "company": "Productora Ejemplo S.A.S.",
+      "role": "Productora general",
+      "phone": "300 000 0000",
+      "email": "produccion@ejemplo.co"
+    },
+    "location": {
+      "personType": "natural",
+      "idType": "cc",
+      "idNumber": "1000000000",
+      "name": "Luis Ejemplo",
+      "company": "Productora Ejemplo S.A.S.",
+      "role": "Jefe de locaciones",
+      "phone": "301 000 0000",
+      "email": "locaciones@ejemplo.co"
+    }
+  },
+  "applicantAddress": "Calle 0 # 00-00, Cali",
+  "exemption": {
+    "type": "none"
+  },
+  "people": {
+    "crew": 18,
+    "extras": 6,
+    "crowd": 0
+  },
+  "risks": {
+    "effects": []
+  },
+  "locations": [
+    {
+      "name": "Bulevar del Río",
+      "neighborhood": "San Antonio",
+      "address": "Av. Colombia con Calle 12",
+      "mapsUrl": "https://maps.google.com/?q=3.4516,-76.5320",
+      "zone": "urban",
+      "use": "set",
+      "scale": "sidewalk",
+      "spaceTypes": [
+        "plazas",
+        "sidewalks"
+      ],
+      "areaM2": 120,
+      "elements": {
+        "vans": 2,
+        "generators": 1,
+        "tripods": 4,
+        "lighting_grip": 1,
+        "tents": 2
+      },
+      "sessions": [
+        {
+          "date": "2026-12-05",
+          "activity": "setup",
+          "start": "13:00",
+          "end": "15:00"
+        },
+        {
+          "date": "2026-12-05",
+          "activity": "shoot",
+          "start": "15:00",
+          "end": "19:00"
+        },
+        {
+          "date": "2026-12-05",
+          "activity": "teardown",
+          "start": "19:00",
+          "end": "20:00"
+        }
+      ],
+      "mobility": {
+        "closures": [
+          "pedestrian_partial_intermittent"
+        ],
+        "direction": "No aplica (zona peatonal)",
+        "side": "Costado del río",
+        "implementation": "Cierre peatonal parcial e intermitente durante las tomas, máximo 3 minutos por toma, con dos auxiliares de producción y conos reflectivos. El paso peatonal se mantiene por el costado opuesto.",
+        "signage": "6 conos reflectivos, 2 vallas tipo barrera y 2 paletas pare/siga.",
+        "loadingArea": "Bahía sobre la Calle 12, frente a la plazoleta.",
+        "parking": "Parqueadero privado cercano para las 2 vanes."
+      }
+    },
+    {
+      "name": "Orilla del río Pance",
+      "neighborhood": "Corregimiento de Pance",
+      "address": "Vía al Pance, km 0",
+      "mapsUrl": "https://maps.google.com/?q=3.3270,-76.5900",
+      "zone": "rural",
+      "use": "set",
+      "scale": "regional",
+      "spaceTypes": [
+        "natural"
+      ],
+      "areaM2": 40,
+      "elements": {
+        "vans": 1,
+        "tripods": 2
+      },
+      "sessions": [
+        {
+          "date": "2026-12-06",
+          "activity": "shoot",
+          "start": "06:00",
+          "end": "09:00"
+        }
+      ],
+      "naturalArea": {
+        "areaName": "Río Pance",
+        "activities": "Planos de la bailarina en la orilla, sin entrar al cauce. Equipo reducido de 8 personas, sin plantas eléctricas.",
+        "impacts": []
+      }
+    }
+  ],
+  "environment": {
+    "wasteTypes": "Residuos aprovechables (botellas, cartón de catering) y orgánicos del refrigerio, en cantidad baja: dos bolsas por jornada.",
+    "wasteStrategy": "Puntos de separación en la base, retiro total al cierre de cada jornada y entrega a una organización de recicladores.",
+    "amplification": {
+      "count": 1,
+      "type": "Parlante de playback de baja potencia"
+    },
+    "generators": {
+      "count": 1,
+      "type": "Planta silenciosa 3 kVA"
+    },
+    "vehicles": {
+      "count": 2,
+      "type": "Vanes de producción"
+    },
+    "noiseMitigation": "Playback a volumen bajo y planta ubicada lejos de viviendas.",
+    "sensitiveSites": "No se identifican hospitales ni colegios cercanos.",
+    "acousticMeasures": "Ubicación estratégica de equipos y reducción del volumen en ensayos."
+  },
+  "outreach": {
+    "strategies": "Volanteo puerta a puerta en la cuadra dos días antes y reunión con la Junta de Acción Comunal de San Antonio.",
+    "positiveImpact": "Contratación de catering local y agradecimiento a la comunidad en los créditos."
+  },
+  "notification": {
+    "consent": true,
+    "email": "produccion@ejemplo.co"
+  }
+}

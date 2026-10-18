@@ -3,31 +3,31 @@ import Base from '../layouts/Base.astro';
 import { Content, frontmatter } from '../../tools/skill/SKILL.md';
 ---
 <Base title="SKILL.md: permiso-rodaje-cali" description={frontmatter.description} path="/skill/">
-  <article class="envoltura doc-skill">
-    <p class="volver"><a href="/agentes/">Volver a la skill para agentes de IA</a></p>
+  <article class="wrap doc-skill">
+    <p class="back"><a href="/agentes/">Volver a la skill para agentes de IA</a></p>
     <header>
       <p class="mono muted">SKILL.md</p>
-      <h1 class="h-seccion">{frontmatter.name}</h1>
+      <h1 class="h-section">{frontmatter.name}</h1>
       <p class="lead">{frontmatter.description}</p>
-      <div class="acciones">
-        <a class="boton principal" href="/skill/permiso-rodaje-cali.zip" download>Descargar la skill (.zip)</a>
-        <a class="boton" href="/skill/SKILL.md" download>Descargar solo SKILL.md</a>
+      <div class="actions">
+        <a class="btn primary" href="/skill/permiso-rodaje-cali.zip" download>Descargar la skill (.zip)</a>
+        <a class="btn" href="/skill/SKILL.md" download>Descargar solo SKILL.md</a>
       </div>
     </header>
-    <div class="prosa"><Content /></div>
+    <div class="prose"><Content /></div>
   </article>
 </Base>
 
 <style>
   .doc-skill { max-width: 46rem; padding-top: 3rem; display: grid; gap: 2.5rem; }
-  .volver { margin: 0; font-size: 0.875rem; }
+  .back { margin: 0; font-size: 0.875rem; }
   header { display: grid; gap: 0.75rem; border-bottom: 1px solid var(--line); padding-bottom: 2rem; }
   header p { margin: 0; }
-  .acciones { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; }
-  .prosa :global(h1) { font-size: 1.75rem; margin: 0 0 1rem; }
-  .prosa :global(h2) { font-size: 1.3rem; margin: 2.25rem 0 0.75rem; }
-  .prosa :global(p), .prosa :global(li) { color: var(--ink-2); }
-  .prosa :global(ul), .prosa :global(ol) { padding-left: 1.3rem; display: grid; gap: 0.4rem; margin: 0 0 1rem; }
-  .prosa :global(strong) { color: var(--ink); }
-  .prosa :global(code) { font-family: var(--mono); font-size: 0.85em; background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px; padding: 0.05rem 0.35rem; color: var(--ink); overflow-wrap: anywhere; }
+  .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; }
+  .prose :global(h1) { font-size: 1.75rem; margin: 0 0 1rem; }
+  .prose :global(h2) { font-size: 1.3rem; margin: 2.25rem 0 0.75rem; }
+  .prose :global(p), .prose :global(li) { color: var(--ink-2); }
+  .prose :global(ul), .prose :global(ol) { padding-left: 1.3rem; display: grid; gap: 0.4rem; margin: 0 0 1rem; }
+  .prose :global(strong) { color: var(--ink); }
+  .prose :global(code) { font-family: var(--mono); font-size: 0.85em; background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px; padding: 0.05rem 0.35rem; color: var(--ink); overflow-wrap: anywhere; }
 </style>
