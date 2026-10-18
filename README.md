@@ -41,14 +41,7 @@ npm run plantillas   # regenera las plantillas (requiere python-docx)
 
 ## Despliegue
 
-Cloudflare Pages con Wrangler (proyecto `filmincali`, configuración en `wrangler.jsonc`).
-
-```sh
-npx wrangler login                                                  # una vez
-npx wrangler pages project create filmincali --production-branch main  # una vez
-npm run deploy                                                      # build + subida de dist/
-```
-
+Es un sitio estático: `npm run build` deja todo en `dist/`, listo para cualquier hosting estático. Los encabezados de seguridad están en `public/_headers`, el formato que leen Cloudflare Pages y Netlify. `npm run deploy` publica con Wrangler en Cloudflare Pages según `wrangler.jsonc`.
 
 ## Licencia
 
